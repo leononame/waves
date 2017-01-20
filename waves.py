@@ -8,12 +8,11 @@ def main():
     pygame.init()
     tile_size = 32
     scr_width, scr_height = 30 * tile_size, 30 * tile_size
-    camera_x, camera_y = 0, 0
+    camera_x, camera_y = 75, 75
     pygame.key.set_repeat(1, 30)
-    screen = pygame.display.set_mode((800, 600))
-    tiled_map = load_pygame('lvl0.tmx')
+    screen = pygame.display.set_mode((scr_width, scr_height))
+    tiled_map = load_pygame('assets/maps/lvl0.tmx')
 
-    a = tiled_map.height
     pygame.display.set_caption("Tilemap game")
     pygame.mouse.set_visible(0)
 
@@ -52,11 +51,11 @@ def main():
                 # escape exits game
                 if event.key == pygame.K_ESCAPE:
                     pygame.event.post(pygame.event.Event(pygame.QUIT))
+                key = event.key
                 if not player.is_colliding(key, tiled_map):
-                    # TODO map key handling
-                    b = 0
+                    current_map.handle_input(key)
 
-        # TODO render map
+        current_map.render(screen)
         player.render(screen)
         # flip screen
         pygame.display.flip()

@@ -8,13 +8,13 @@ class Player(object):
     def __init__(self, x, y, cx, cy):
         num = 8
         duration = 3
-        self.anim_image_right = Utils.load_image("../tilesets/LPC Base Assets/sprites/people/princess.png")
+        self.anim_image_right = Utils.load_image("assets/LPC Base Assets/sprites/people/princess.png")
         self.anim_right = Animation.Animation(self.anim_image_right, 64, 192, num, 64, 64, duration)
-        self.anim_image_left = Utils.load_image("../tilesets/LPC Base Assets/sprites/people/princess.png")
+        self.anim_image_left = Utils.load_image("assets/LPC Base Assets/sprites/people/princess.png")
         self.anim_left = Animation.Animation(self.anim_image_left, 64, 64, num, 64, 64, duration)
-        self.anim_image_up = Utils.load_image("../tilesets/LPC Base Assets/sprites/people/princess.png")
+        self.anim_image_up = Utils.load_image("assets/LPC Base Assets/sprites/people/princess.png")
         self.anim_up = Animation.Animation(self.anim_image_up, 64, 0, num, 64, 64, duration)
-        self.anim_image_down = Utils.load_image("../tilesets/LPC Base Assets/sprites/people/princess.png")
+        self.anim_image_down = Utils.load_image("assets/LPC Base Assets/sprites/people/princess.png")
         self.anim_down = Animation.Animation(self.anim_image_down, 64, 128, num, 64, 64, duration)
         # position and direction and running
         self.pos_x = x * 32
