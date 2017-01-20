@@ -1,11 +1,18 @@
+import random
+
 import pygame
 from pytmx.util_pygame import load_pygame
+
+import Utils
+
 
 class Map(object):
     def __init__(self, cx, cy, tile_map):
         self.camera_x = cx
         self.camera_y = cy
         self.tile_map = tile_map
+        self.animation_duration = 5
+        self.counter = 0
 
     def handle_input(self, key):
         if key == pygame.K_LEFT: self.camera_x -= 1
@@ -14,8 +21,10 @@ class Map(object):
         if key == pygame.K_DOWN: self.camera_y += 1
 
     def render(self, screen):
-        # for layer in self.tile_map.visible_layers:
-        #     if self.tile_map.get_tile_image(player.map_x, player.map_y, 2) is None:
+        self.counter += 1
+        if self.counter == self.animation_duration:
+            self.counter = 0
+
         for layer in range(0, 2):
             for x in range(0, screen.get_width() / 32):
                 for y in range(0, screen.get_height() / 32):
@@ -24,8 +33,16 @@ class Map(object):
 
                     if tx < 0 or tx >= self.tile_map.width or ty < 0 or ty >= self.tile_map.height:
                         continue
+
+                    self.animate_water(tx, ty, layer)
                     image = self.tile_map.get_tile_image(tx, ty, layer)
+
                     if image is not None:
                         screen.blit(image, (x * 32, y * 32))
 
-
+    def animate_water(self, x, y, layer):
+        props = self.tile_map.get_tile_properties(x, y, layer)
+        if self.counter == 0 and props is not None and props['animated_water']:
+            image_gid = props['frames'][random.randint(0, 6)].gid
+            # Post it on fringe layer because ground layer is buggy
+            self.tile_map.layers[1].data[y][x] = image_gid

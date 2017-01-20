@@ -1,1 +1,3 @@
 collision0.tmx
+animation0.tmx
+
