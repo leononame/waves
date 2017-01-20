@@ -25,7 +25,7 @@ class Map(object):
         if self.counter == self.animation_duration:
             self.counter = 0
 
-        for layer in range(0, 2):
+        for layer in [0, 1, 4]: # ground, fringe, water
             for x in range(0, screen.get_width() / 32):
                 for y in range(0, screen.get_height() / 32):
                     tx = x + self.camera_x
@@ -45,4 +45,4 @@ class Map(object):
         if self.counter == 0 and props is not None and props['animated_water']:
             image_gid = props['frames'][random.randint(0, 6)].gid
             # Post it on fringe layer because ground layer is buggy
-            self.tile_map.layers[1].data[y][x] = image_gid
+            self.tile_map.layers[4].data[y][x] = image_gid

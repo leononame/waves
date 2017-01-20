@@ -8,7 +8,7 @@ import Player
 
 
 def generateSinkhole(tiled_map, xpos, ypos, width, height):
-    ground_layer = tiled_map.layers[1]
+    fringe_layer = tiled_map.layers[1]
     collision_layer = tiled_map.layers[2]
     asset_layer = tiled_map.layers[3]
     topl, top, topr = asset_layer.data[0][0], asset_layer.data[0][1], asset_layer.data[0][2]
@@ -38,7 +38,7 @@ def generateSinkhole(tiled_map, xpos, ypos, width, height):
             else:
                 pos = w
 
-            ground_layer.data[ypos + j][xpos + i] = pos
+            fringe_layer.data[ypos + j][xpos + i] = pos
             if pos is w or pos is top:
                 collision_layer.data[ypos + j][xpos + i] = pos
 
