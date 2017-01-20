@@ -44,19 +44,19 @@ class Player(object):
         if key == pygame.K_RIGHT:
             self.dir = self.__right
             self.walking = True
-            if self.is_collision(self.map_x + 2, self.map_y, map):
+            if self.is_collision(self.map_x + 1, self.map_y, map) or self.is_collision(self.map_x + 2, self.map_y, map):
                 return True
             self.map_x += 1
         if key == pygame.K_DOWN:
             self.dir = self.__down
             self.walking = True
-            if self.is_collision(self.map_x, self.map_y + 1, map):
+            if self.is_collision(self.map_x, self.map_y + 1, map) or self.is_collision(self.map_x + 1, self.map_y + 1, map):
                 return True
             self.map_y += 1
         if key == pygame.K_UP:
             self.dir = self.__up
             self.walking = True
-            if self.is_collision(self.map_x, self.map_y - 1, map):
+            if self.is_collision(self.map_x, self.map_y - 1, map) or self.is_collision(self.map_x + 1, self.map_y - 1, map):
                 return True
             self.map_y -= 1
         return False

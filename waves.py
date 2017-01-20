@@ -33,6 +33,14 @@ def main():
     # FPS
     fps = 30
 
+    ground_layer = tiled_map.layers[0]
+    collision_layer = tiled_map.layers[2]
+    # Water gid
+    water_gid = ground_layer.data[0][0]
+    # Collision gid
+    collision_gid = collision_layer.data[0][0]
+    ground_layer.data[75][75] = water_gid
+    collision_layer.data[75][75] = collision_gid
     # Start loop
     while not done:
         clock.tick(fps)
