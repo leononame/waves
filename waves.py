@@ -8,7 +8,6 @@ def main():
     pygame.init()
     tile_size = 32
     scr_width, scr_height = 30 * tile_size, 30 * tile_size
-    camera_x, camera_y = 75, 75
     pygame.key.set_repeat(1, 30)
     screen = pygame.display.set_mode((scr_width, scr_height))
     tiled_map = load_pygame('assets/maps/lvl0.tmx')
@@ -24,6 +23,7 @@ def main():
 
     player_dx = int(scr_width / 32 / 2) - 1
     player_dy = int(scr_height / 32 / 2) - 1
+    camera_x, camera_y = 72 - player_dx, 70 - player_dy
 
     # Create game objects
     # Create player
