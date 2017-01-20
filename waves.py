@@ -17,6 +17,10 @@ def generateSinkhole(tiled_map, xpos, ypos, width, height):
 
     for i in range(width):
         for j in range(height):
+            if fringe_layer.data[ypos + j][xpos + i] in [topl, top, topr, l, w, r, bottom, bottomr, bottoml]:
+                fringe_layer.data[ypos + j][xpos + i] = w
+                collision_layer.data[ypos + j][xpos + i] = w
+                continue
             # Corners
             if i is 0 and j is 0:  # top left corner
                 pos = topl
