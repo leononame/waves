@@ -10,6 +10,9 @@
    <frame tileid="15" duration="100"/>
    <frame tileid="16" duration="100"/>
    <frame tileid="17" duration="100"/>
+   <frame tileid="10" duration="250"/>
+   <frame tileid="10" duration="100"/>
+   <frame tileid="10" duration="100"/>
    <frame tileid="10" duration="100"/>
   </animation>
  </tile>

@@ -43,6 +43,6 @@ class Map(object):
     def animate_water(self, x, y, layer):
         props = self.tile_map.get_tile_properties(x, y, layer)
         if self.counter == 0 and props is not None and props['animated_water']:
-            image_gid = props['frames'][random.randint(0, 3)].gid
+            image_gid = props['frames'][random.randint(0, 6)].gid
             # Post it on fringe layer because ground layer is buggy
             self.tile_map.layers[1].data[y][x] = image_gid
