@@ -33,14 +33,45 @@ def main():
     # FPS
     fps = 30
 
-    ground_layer = tiled_map.layers[0]
+    ####################
+    # Map manipulation #
+    ####################
+    ground_layer = tiled_map.layers[1]
     collision_layer = tiled_map.layers[2]
-    # Water gid
-    water_gid = ground_layer.data[0][0]
-    # Collision gid
-    collision_gid = collision_layer.data[0][0]
-    ground_layer.data[75][75] = water_gid
-    collision_layer.data[75][75] = collision_gid
+    # # Water gid
+    # water_gid = ground_layer.data[0][0]
+    # # Collision gid
+    # collision_gid = collision_layer.data[0][0]
+    # # Manipulate map
+    # ground_layer.data[75][75] = water_gid
+    # collision_layer.data[75][75] = collision_gid
+    ###########################
+    # Better map manipulation #
+    ###########################
+    asset_layer = tiled_map.layers[3]
+    topl, top, topr = asset_layer.data[0][0], asset_layer.data[0][1], asset_layer.data[0][2]
+    l, w, r = asset_layer.data[1][0], asset_layer.data[1][1], asset_layer.data[1][2]
+    bottoml, bottom, bottomr = asset_layer.data[2][0], asset_layer.data[2][1], asset_layer.data[2][2]
+
+    ground_layer.data[75][75] = topl
+    ground_layer.data[75][76] = top
+    ground_layer.data[75][77] = topr
+    ground_layer.data[76][75] = l
+    ground_layer.data[76][76] = w
+    ground_layer.data[76][77] = r
+    ground_layer.data[77][75] = bottoml
+    ground_layer.data[77][76] = bottom
+    ground_layer.data[77][77] = bottomr
+    # collision_layer.data[75][75] = topl
+    collision_layer.data[75][76] = top
+    # collision_layer.data[75][77] = topr
+    # collision_layer.data[76][75] = l
+    collision_layer.data[76][76] = w
+    # collision_layer.data[76][77] = r
+    # collision_layer.data[77][75] = bottoml
+    # collision_layer.data[77][76] = bottom
+    # collision_layer.data[77][77] = bottomr
+
     # Start loop
     while not done:
         clock.tick(fps)
