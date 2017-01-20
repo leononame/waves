@@ -4,6 +4,42 @@ from pytmx.util_pygame import load_pygame
 import Map
 import Player
 
+def generateSinkhole(tiled_map, xpos, ypos, width, height):
+    ground_layer = tiled_map.layers[1]
+    collision_layer = tiled_map.layers[2]
+    asset_layer = tiled_map.layers[3]
+    topl, top, topr = asset_layer.data[0][0], asset_layer.data[0][1], asset_layer.data[0][2]
+    l, w, r = asset_layer.data[1][0], asset_layer.data[1][1], asset_layer.data[1][2]
+    bottoml, bottom, bottomr = asset_layer.data[2][0], asset_layer.data[2][1], asset_layer.data[2][2]
+
+    for i in range(width):
+        for j in range(height):
+            # Corners
+            if i is 0 and j is 0:  # top left corner
+                pos = topl
+            elif i is width - 1 and j is 0: # top right corner
+                pos = topr
+            elif i is 0 and j is height - 1:  # bot left corner
+                pos = bottoml
+            elif i is width - 1 and j is height - 1: # bot right corner
+                pos = bottomr
+            # Borders
+            elif i is 0: # left border
+                pos = l
+            elif i is width - 1: # right border
+                pos = r
+            elif j is 0: # top border
+                pos = top
+            elif j is height - 1: # bot border
+                pos = bottom
+            else:
+                pos = w
+
+            ground_layer.data[ypos + j][xpos + i] = pos
+            if pos is w or pos is top:
+                collision_layer.data[ypos + j][xpos + i] = pos
+
+
 def main():
     pygame.init()
     tile_size = 32
@@ -33,6 +69,7 @@ def main():
     # FPS
     fps = 30
 
+    generateSinkhole(tiled_map, 80, 80, 5, 7)
     ####################
     # Map manipulation #
     ####################
