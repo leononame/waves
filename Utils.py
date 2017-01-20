@@ -14,3 +14,6 @@ def load_image(filename, color_key=None):
         image.set_colorkey(color_key, pygame.RLEACCEL)
 
     return image
+
+def rotate(l, n):
+    return l[-n:] + l[:-n]
