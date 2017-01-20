@@ -8,6 +8,7 @@
   <tile id="15">
    <properties>
     <property name="animated_water" type="bool" value="true"/>
+    <property name="gid" type="int" value="0"/>
    </properties>
    <animation>
     <frame tileid="15" duration="100"/>

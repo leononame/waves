@@ -11,7 +11,7 @@ class Map(object):
         self.camera_x = cx
         self.camera_y = cy
         self.tile_map = tile_map
-        self.animation_duration = 15
+        self.animation_duration = 5
         self.counter = 0
 
     def handle_input(self, key):
@@ -33,16 +33,16 @@ class Map(object):
 
                     if tx < 0 or tx >= self.tile_map.width or ty < 0 or ty >= self.tile_map.height:
                         continue
-                    image = self.get_image(tx, ty, layer)
+
+                    self.animate_water(tx, ty, layer)
+                    image = self.tile_map.get_tile_image(tx, ty, layer)
 
                     if image is not None:
                         screen.blit(image, (x * 32, y * 32))
 
-    def get_image(self, x, y, layer):
-        if self.counter is 0:
-            props = self.tile_map.get_tile_properties(x, y, layer)
-            if props is not None and props['animated_water']:
-                image_gid = props['frames'][random.randint(0, 3)].gid
-                return self.tile_map.get_tile_image_by_gid(image_gid)
-        return self.tile_map.get_tile_image(x, y, layer)
-
+    def animate_water(self, x, y, layer):
+        props = self.tile_map.get_tile_properties(x, y, layer)
+        if self.counter == 0 and props is not None and props['animated_water']:
+            image_gid = props['frames'][random.randint(0, 3)].gid
+            # Post it on fringe layer because ground layer is buggy
+            self.tile_map.layers[1].data[y][x] = image_gid
