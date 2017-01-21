@@ -47,6 +47,9 @@ def generate_logs(xpos, ypos, tile_map):
     for i in range (-1, 2):
         for j in range (0, 2):
             tile_map.layers[7].data[ypos + i][xpos + j] = log_gid
+            # Remove collision from collison layer
+            if tile_map.get_tile_image(xpos, ypos, 2) is not None:
+                remove_tile(xpos, ypos, tile_map, 2)
 
 
 def add_log(xpos, ypos, tile_map):
@@ -57,3 +60,20 @@ def add_log(xpos, ypos, tile_map):
     # Remove collision from collison layer
     if tile_map.get_tile_image(xpos, ypos, 2) is not None:
         remove_tile(xpos, ypos, tile_map, 2)
+
+
+def remove_log(xpos, ypos, tile_map):
+    # Remove log from log layer
+    remove_tile(xpos, ypos, tile_map, 7)
+    # Get water gid
+    water_gid = tile_map.layers[0].data[0][0]
+    # Get border gid (bottom border is collision layer but not water)
+    border_gid = tile_map.layers[3].data[0][1]
+    # If tile is water gid, add collision layer
+    print(border_gid)
+    print(tile_map.layers[1].data[ypos][xpos])
+    print(xpos)
+    print(ypos)
+    if tile_map.layers[0].data[ypos][xpos] == water_gid or tile_map.layers[1].data[ypos][xpos] == border_gid:
+        tile_map.layers[2].data[ypos][xpos] = water_gid
+

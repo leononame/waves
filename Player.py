@@ -136,21 +136,21 @@ class Player(object):
         if offset:
             # Remove log from log layer
             if self.dir == self.__right:
-                Utils.remove_tile(self.map_x + 2, self.map_y, tile_map, 7)
-                Utils.remove_tile(self.map_x + 3, self.map_y, tile_map, 7)
+                Utils.remove_log(self.map_x + 2, self.map_y, tile_map)
+                Utils.remove_log(self.map_x + 3, self.map_y, tile_map)
             elif self.dir == self.__left:
-                Utils.remove_tile(self.map_x - 1, self.map_y, tile_map, 7)
-                Utils.remove_tile(self.map_x - 2, self.map_y, tile_map, 7)
+                Utils.remove_log(self.map_x - 1, self.map_y, tile_map)
+                Utils.remove_log(self.map_x - 2, self.map_y, tile_map)
             elif self.dir == self.__down:
-                Utils.remove_tile(self.map_x, self.map_y + 1, tile_map, 7)
-                Utils.remove_tile(self.map_x + 1, self.map_y + 1, tile_map, 7)
+                Utils.remove_log(self.map_x, self.map_y + 1, tile_map)
+                Utils.remove_log(self.map_x + 1, self.map_y + 1, tile_map)
             elif self.dir == self.__up:
-                Utils.remove_tile(self.map_x, self.map_y - 1, tile_map, 7)
-                Utils.remove_tile(self.map_x + 1, self.map_y - 1, tile_map, 7)
+                Utils.remove_log(self.map_x, self.map_y - 1, tile_map)
+                Utils.remove_log(self.map_x + 1, self.map_y - 1, tile_map)
         else:
             # Remove log from log layer
-            Utils.remove_tile(self.map_x, self.map_y, tile_map, 7)
-            Utils.remove_tile(self.map_x + 1, self.map_y, tile_map, 7)
+            Utils.remove_log(self.map_x, self.map_y, tile_map)
+            Utils.remove_log(self.map_x + 1, self.map_y, tile_map)
 
     def can_throw_log(self, tile_map, offset = True):
         retval = True
@@ -190,7 +190,6 @@ class Player(object):
 
         return retval
 
-
     def throw_log(self, tile_map, offset=True):
         self.carrying_log = False
         if offset:
@@ -209,7 +208,6 @@ class Player(object):
         else:
             Utils.add_log(self.map_x, self.map_y, tile_map)
             Utils.add_log(self.map_x + 1, self.map_y, tile_map)
-
 
     def fell_tree(self, tile_map):
         # Check directions
