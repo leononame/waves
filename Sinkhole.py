@@ -41,39 +41,41 @@ class Sinkhole:
         self.collision_layer.data[ypos][xpos] = self.w
 
     def changeToBorder(self, xpos, ypos, d):
-        # tiles with assets (borders and corners) are replaced with water.
-        # if adjacent tile is water, don't set an asset. Instead set water too.
+        # Canion spreads vertical (up or down) -> change LEFT and RIGHT adjacent tiles
         if d is self.up or d is self.down:
-            # left and right adjacent tiles with assets -> water
+
+            # assets -> water
             if self.isAsset(xpos - 1, ypos, 0, 0): self.changeToWater(xpos - 1, ypos)
             if self.isAsset(xpos + 1, ypos, 0, 0): self.changeToWater(xpos + 1, ypos)
-            # left and right adjacent tiles with water -> stay water
+
+            # water -> stay water
             if self.getType(xpos - 1, ypos) is self.w: self.changeToWater(xpos - 1, ypos)
             if self.getType(xpos + 1, ypos) is self.w: self.changeToWater(xpos + 1, ypos)
-            # left and right adjacent tiles with grass -> l, r border
+
+            # grass -> l, r border
             if self.getType(xpos - 1, ypos) is self.grass:
                 self.fringe_layer.data[ypos][xpos - 1] = self.l
-                # self.collision_layer.data[ypos][xpos - 1] = self.l
             if self.getType(xpos + 1, ypos) is self.grass:
                 self.fringe_layer.data[ypos][xpos + 1] = self.r
-                # self.collision_layer.data[ypos][xpos + 1] = self.r
 
 
+        # Canion spreads horizontal (left or right) -> change TOP and BOTTOM adjacent tiles
         if d is self.left or d is self.right:
-            # top and bottom adjacent tiles with assets -> water
+
+            # assets -> water
             if(self.isAsset(xpos, ypos + 1, 0, 0)): self.changeToWater(xpos, ypos + 1)
             if(self.isAsset(xpos, ypos - 1, 0, 0)): self.changeToWater(xpos, ypos - 1)
-            # top and bottom adjacent tiles with water -> stay water
+
+            # water -> stay water
             if self.getType(xpos, ypos + 1) is self.w: self.changeToWater(xpos, ypos + 1)
             if self.getType(xpos, ypos - 1) is self.w: self.changeToWater(xpos, ypos - 1)
 
-            # top and bottom adjacent tiles with grass -> t, b border
+            # grass -> t, b border
             if self.getType(xpos, ypos + 1) is self.grass:
                 self.fringe_layer.data[ypos + 1][xpos] = self.bottom
-                # self.collision_layer.data[ypos][xpos - 1] = self.l
             if self.getType(xpos, ypos - 1) is self.grass:
                 self.fringe_layer.data[ypos - 1][xpos] = self.top
-                self.collision_layer.data[ypos - 1][xpos] = self.top
+                self.collision_layer.data[ypos - 1][xpos] = self.top  # top borders are on collision layer
 
 
 
