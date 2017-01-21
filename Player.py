@@ -118,10 +118,23 @@ class Player(object):
     def is_standing_on_log(self, tile_map):
         # Layer 7 is log layer
         return tile_map.get_tile_image(self.map_x, self.map_y, 7) is not None
+
     def pick_up_log(self, tile_map):
         self.carrying_log = True
         # Remove log from log layer
         Utils.remove_tile(self.map_x, self.map_y, tile_map, 7)
+
+    def throw_log(self, tile_map, offset=0):
+        self.carrying_log = False
+        if self.dir == self.__right:
+            Utils.add_log(self.map_x + 1, self.map_y, tile_map)
+        elif self.dir == self.__left:
+            Utils.add_log(self.map_x - 1, self.map_y, tile_map)
+        elif self.dir == self.__down:
+            Utils.add_log(self.map_x + offset, self.map_y + 1, tile_map)
+        elif self.dir == self.__up:
+            Utils.add_log(self.map_x + offset, self.map_y - 1, tile_map)
+
 
     def fell_tree(self, tile_map):
         # Check directions

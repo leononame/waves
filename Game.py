@@ -88,7 +88,7 @@ class Game:
         tree_num = 0
         while not done:
             # Generate sinkholes
-            sinkhole.generateWave(random.randint(70, 300), random.randint(70, 300), random.randint(10, 30))
+            # sinkhole.generateWave(random.randint(70, 300), random.randint(70, 300), random.randint(10, 30))
             self.clock.tick(self.fps)
             # Fill screen
             self.screen.fill((198, 209, 255))
@@ -119,8 +119,10 @@ class Game:
                         if player.is_in_front_of_tree(tiled_map):
                             player.fell_tree(tiled_map)
                         # Pick up log if possible
-                        if not player.carrying_log and player.is_standing_on_log(tiled_map):
+                        elif not player.carrying_log and player.is_standing_on_log(tiled_map):
                             player.pick_up_log(tiled_map)
+                        elif player.carrying_log:
+                            player.throw_log(tiled_map)
             # Render
             current_map.render(self.screen)
             player.render(self.screen)
