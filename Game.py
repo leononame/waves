@@ -113,12 +113,14 @@ class Game:
                     # pass keys to map if player is not colliding in order to move camera
                     if not player.is_colliding(key, tiled_map):
                         current_map.handle_input(key)
+                    # Fell tree if possible
+                    if event.key == pygame.K_SPACE and player.is_in_front_of_tree(tiled_map):
+                        player.fell_tree(tiled_map)
             # Render
             current_map.render(self.screen)
             player.render(self.screen)
             current_map.render_ontop_of_player(self.screen)
-            if player.is_in_front_of_tree(tiled_map):
-                self.screen_overlay()
+
             if player.is_dead(tiled_map):
                 done = True
                 self.display_game_over()

@@ -111,3 +111,35 @@ class Player(object):
         elif self.dir == self.__up:
             return self.__is_trunk(self.map_x, self.map_y - 1, map) or self.__is_trunk(self.map_x + 1, self.map_y - 1, map)
         return False
+
+    def fell_tree(self, tile_map):
+        # Check directions
+        if self.dir == self.__down:
+            # When looking down, we collide when x,y+1 or x+1,y+1
+            if self.__is_trunk(self.map_x, self.map_y + 1, tile_map):
+                x = self.map_x
+                y = self.map_y + 1
+            elif self.__is_trunk(self.map_x + 1, self.map_y + 1, tile_map):
+                x = self.map_x + 1
+                y = self.map_y +1
+        elif self.dir == self.__right:
+            if self.__is_trunk(self.map_x + 1, self.map_y, tile_map):
+                x = self.map_x + 1
+                y = self.map_y
+            elif self.__is_trunk(self.map_x + 2, self.map_y, tile_map):
+                x = self.map_x + 2
+                y = self.map_y
+        elif self.dir == self.__left:
+            if self.__is_trunk(self.map_x - 1, self.map_y, tile_map):
+                x = self.map_x - 1
+                y = self.map_y
+        elif self.dir == self.__up:
+            if self.__is_trunk(self.map_x, self.map_y - 1, tile_map):
+                x = self.map_x
+                y = self.map_y - 1
+            elif self.__is_trunk(self.map_x + 1, self.map_y - 1, tile_map):
+                x = self.map_x + 1
+                y = self.map_y - 1
+        if x is not None and y is not None:
+            Utils.fell_tree_at(x, y, tile_map)
+

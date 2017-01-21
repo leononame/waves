@@ -113,14 +113,7 @@ class Sinkhole:
     def kill_tree(self, xpos, ypos):
         if not self.is_tree(xpos, ypos):
             return None
-        # Remove collision layer
-        Utils.remove_tile(xpos, ypos, self.tiled_map, 2)
-        # Remove tree trunk layer
-        Utils.remove_tile(xpos, ypos, self.tiled_map, 6)
-        # Remove all tree tiles in tree layer
-        for x in range(xpos - 1, xpos + 2):
-            for y in range(ypos - 3, ypos + 1):
-                Utils.remove_tile(x, y, self.tiled_map, 5)
+        Utils.fell_tree_at(xpos, ypos, self.tiled_map)
 
     # Returns true if there is a tree at that tile
     def is_tree(self, xpos, ypos):
