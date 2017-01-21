@@ -44,6 +44,7 @@ class Sinkhole:
         self.collision_layer.data[ypos][xpos] = self.w
 
     def changeToBorder(self, xpos, ypos, d, isEnd):
+
         # Canion spreads vertical (up or down) -> change LEFT and RIGHT adjacent tiles
         if d is self.up or d is self.down:
             # if not isEnd:
@@ -134,6 +135,7 @@ class Sinkhole:
     def generateCanion(self, xpos, ypos, len):
         # Check pos moves the starting position to water if necessary
         direction = random.randint(0, 3)
+        direction = self.up
         xpos, ypos = self.checkPos(xpos, ypos, direction)
         print("At pos: (" + str(xpos) + ', ' + str(ypos) + ')')
         neg_dir = self.negateDirection(direction)
@@ -141,14 +143,17 @@ class Sinkhole:
         print("Entering loop")
         # Todo
         # self.setCorners_Begin(xpos, ypos, neg_dir)
-        for i in range(len):
+        while self.getType(xpos, ypos) is self.w:
             xpos, ypos = self.spreadCanion(xpos, ypos, neg_dir)
+
+        for i in range(len):
             print("Changing tile: (" + str(xpos) + ', ' + str(ypos) + ')')
 
             # Change the water tile...
             self.changeToWater(xpos, ypos)
             #  ... and then the borders at the adjacent tiles
             self.changeToBorder(xpos, ypos, neg_dir, False)
+            # Generate outer borders
             if i == 0:
                 if neg_dir == self.down:
                     self.fringe_layer.data[ypos][xpos - 1] = self.outer_topl
@@ -162,6 +167,8 @@ class Sinkhole:
                 if neg_dir == self.left:
                     self.fringe_layer.data[ypos - 1][xpos] = self.outer_bottoml
                     self.fringe_layer.data[ypos + 1][xpos] = self.outer_topl
+            if i is not len - 1:
+                xpos, ypos = self.spreadCanion(xpos, ypos, neg_dir)
 
         self.changeToBorder(xpos, ypos, neg_dir, True)
 
