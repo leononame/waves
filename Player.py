@@ -34,6 +34,8 @@ class Player(object):
         self.map_x = x + cx
         self.map_y = y + 1 + cy
 
+        self.carrying_log = False
+
     def is_colliding(self, key, map):
         if key == pygame.K_LEFT:
             self.dir = self.__left
@@ -111,6 +113,15 @@ class Player(object):
         elif self.dir == self.__up:
             return self.__is_trunk(self.map_x, self.map_y - 1, map) or self.__is_trunk(self.map_x + 1, self.map_y - 1, map)
         return False
+
+    # Checks if player can pick up log
+    def is_standing_on_log(self, tile_map):
+        # Layer 7 is log layer
+        return tile_map.get_tile_image(self.map_x, self.map_y, 7) is not None
+    def pick_up_log(self, tile_map):
+        self.carrying_log = True
+        # Remove log from log layer
+        Utils.remove_tile(self.map_x, self.map_y, tile_map, 7)
 
     def fell_tree(self, tile_map):
         # Check directions

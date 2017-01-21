@@ -113,9 +113,14 @@ class Game:
                     # pass keys to map if player is not colliding in order to move camera
                     if not player.is_colliding(key, tiled_map):
                         current_map.handle_input(key)
-                    # Fell tree if possible
-                    if event.key == pygame.K_SPACE and player.is_in_front_of_tree(tiled_map):
-                        player.fell_tree(tiled_map)
+                    # SPACE is action key
+                    if event.key == pygame.K_SPACE:
+                        # Fell tree if possible
+                        if player.is_in_front_of_tree(tiled_map):
+                            player.fell_tree(tiled_map)
+                        # Pick up log if possible
+                        if not player.carrying_log and player.is_standing_on_log(tiled_map):
+                            player.pick_up_log(tiled_map)
             # Render
             current_map.render(self.screen)
             player.render(self.screen)
