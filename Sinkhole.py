@@ -54,6 +54,7 @@ class Sinkhole:
         # waves spread in negative direction of water search direction
         neg_dir = self.negateDirection(direction)
         for i in range(N):
+            xpos_old, ypos_old = xpos, ypos
             xpos, ypos = self.spreadWave(xpos, ypos, neg_dir)
 
             # Change gid in fringe and ground layers
@@ -61,6 +62,24 @@ class Sinkhole:
             self.ground_layer.data[ypos ][xpos] = self.w
             # Change collison layer
             self.collision_layer.data[ypos][xpos] = self.w
+            # Change neighbour tile from original tile too
+            self.fillNeighbour(xpos, ypos, xpos_old, ypos_old, neg_dir)
+
+
+    def fillNeighbour(self, xpos, ypos, xpos_old, ypos_old, d):
+        if d is self.up or d is self.down:
+            y = ypos_old
+            x = xpos
+        if d is self.left or d is self.right:
+            x = xpos_old
+            y = ypos
+        # Change gid in fringe and ground layers
+        self.fringe_layer.data[y][x] = self.w
+        self.ground_layer.data[y][x] = self.w
+        # Change collison layer
+        self.collision_layer.data[y][x] = self.w
+
+
 
 
     def generateSinkhole(self, xpos, ypos, width, height):

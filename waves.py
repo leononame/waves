@@ -46,10 +46,10 @@ def main():
     while not done:
         # Spawn random water sinkholes
         count += 1
-        if count is fps / 8:
+        if count is fps / 3:
             count = 0
             # sinkhole.generateSinkhole(random.randint(70, 300), random.randint(70, 300), random.randint(3, 12), random.randint(3,8))
-            sinkhole.generateWave(random.randint(70, 300), random.randint(70, 300), random.randint(3, 30))
+            sinkhole.generateWave(random.randint(70, 300), random.randint(70, 300), random.randint(10, 30))
 
 
         clock.tick(fps)
