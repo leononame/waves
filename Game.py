@@ -119,6 +119,7 @@ class Game:
                     if event.key == pygame.K_SPACE:
                         # Fell tree if possible
                         if player.is_in_front_of_tree(tiled_map):
+                            debounced = False
                             player.fell_tree(tiled_map)
                         # Pick up log if possible
                         elif not player.carrying_log and player.is_standing_on_log(tiled_map) and debounced:

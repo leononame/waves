@@ -45,7 +45,8 @@ def generate_logs(xpos, ypos, tile_map):
     log_gid = tile_map.layers[3].data[3][1]
     # Add logs to log layer
     for i in range (-1, 2):
-        tile_map.layers[7].data[ypos][xpos + i] = log_gid
+        for j in range (0, 2):
+            tile_map.layers[7].data[ypos + i][xpos + j] = log_gid
 
 
 def add_log(xpos, ypos, tile_map):
