@@ -86,8 +86,8 @@ class Game:
 
         while not done:
             # Temporarily generate water here
-            for i in range(0, 10):
-                self.generateSinkhole(tiled_map, random.randint(80, 400), random.randint(80, 400), random.randint(3, 16), random.randint(3, 12))
+            # for i in range(0, 10):
+            #     self.generateSinkhole(tiled_map, random.randint(80, 400), random.randint(80, 400), random.randint(3, 16), random.randint(3, 12))
             self.clock.tick(self.fps)
             # Fill screen
             self.screen.fill((198, 209, 255))
