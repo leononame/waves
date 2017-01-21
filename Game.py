@@ -49,7 +49,8 @@ class Game:
 
         while not done:
             # Temporarily generate water here
-            self.generateSinkhole(self.tiled_map, random.randint(80, 400), random.randint(80, 400), random.randint(3, 16), random.randint(3, 12))
+            for i in range(0, 10):
+                self.generateSinkhole(self.tiled_map, random.randint(80, 400), random.randint(80, 400), random.randint(3, 16), random.randint(3, 12))
             self.clock.tick(self.fps)
             # Fill screen
             self.screen.fill((198, 209, 255))
@@ -99,6 +100,23 @@ class Game:
         self.screen.blit(label, (135, 115))
         # Flip display
         pygame.display.flip()
+
+    def wait_exit(self):
+        exit = False
+        while not exit:
+            self.clock.tick(self.fps)
+            # Get all events
+            for event in pygame.event.get():
+                # exit game
+                if event.type == pygame.QUIT:
+                    exit = True
+
+                # controls
+                if event.type == pygame.KEYDOWN:
+                    # escape exits game
+                    if event.key == pygame.K_ESCAPE:
+                        pygame.event.post(pygame.event.Event(pygame.QUIT))
+
 
     #Only a temporary method
     def generateSinkhole(self, tiled_map, xpos, ypos, width, height):

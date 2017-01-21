@@ -74,20 +74,7 @@ def display_game_over(screen):
 def main():
     game = Game.Game()
     game.run()
-    exit = False
-    while not exit:
-        game.clock.tick(game.fps)
-        # Get all events
-        for event in pygame.event.get():
-            # exit game
-            if event.type == pygame.QUIT:
-                exit = True
-
-            # controls
-            if event.type == pygame.KEYDOWN:
-                # escape exits game
-                if event.key == pygame.K_ESCAPE:
-                    pygame.event.post(pygame.event.Event(pygame.QUIT))
+    game.wait_exit()
 
 
 if __name__ == '__main__':
