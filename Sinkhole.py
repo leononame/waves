@@ -61,8 +61,10 @@ class Sinkhole:
                 # If the tile is already occupied with something from asset layer change to water
                 if self.isAsset(xpos, ypos, i, j):
                     pos = self.w
-                # Change gid
+                # Change gid in fringe layer and for water change ground layer too
                 self.fringe_layer.data[ypos + j][xpos + i] = pos
+                if pos is self.w:
+                    self.ground_layer.data[ypos + j][xpos + i] = pos
 
                 # Add collison layer
                 if pos is self.w or pos is self.top:
