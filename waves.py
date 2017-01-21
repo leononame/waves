@@ -57,11 +57,14 @@ def display_game_over(screen):
     # Fill black
     s.fill((0, 0, 0))  # this fills the entire surface
     screen.blit(s, (0, 0))  # (0,0) are the top-left coordinates
+    # GUI Tile
+    gui_tiles = Utils.load_image("assets/RPG GUI/RPG_GUI_v1.png")
+    screen.blit(gui_tiles, (100, 100), pygame.Rect(15, 115, 300, 80))
     # Initialize font
-    font = pygame.font.SysFont("monospace", 75)
+    font = pygame.font.SysFont("monospace", 40)
     # Render text
     label = font.render("Game Over", 1, (204, 153, 0))
-    screen.blit(label, (100, 100))
+    screen.blit(label, (135, 115))
     # Flip display
     pygame.display.flip()
     return True
