@@ -5,6 +5,7 @@ from pytmx.util_pygame import load_pygame
 
 import Map
 import Player
+import Sinkhole
 import Utils
 
 
@@ -80,7 +81,8 @@ class Game:
         player = Player.Player(player_dx, player_dy, camera_x, camera_y)
         # Create map
         current_map = Map.Map(camera_x, camera_y, tiled_map)
-
+        # Create sinkhole generatpr
+        sinkhole = Sinkhole.Sinkhole(tiled_map)
         # Flow control
         done = False
 
@@ -88,6 +90,7 @@ class Game:
             # Temporarily generate water here
             # for i in range(0, 10):
             #     self.generateSinkhole(tiled_map, random.randint(80, 400), random.randint(80, 400), random.randint(3, 16), random.randint(3, 12))
+            sinkhole.generateWave(random.randint(70, 300), random.randint(70, 300), random.randint(10, 30))
             self.clock.tick(self.fps)
             # Fill screen
             self.screen.fill((198, 209, 255))
