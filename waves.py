@@ -6,6 +6,7 @@ from pytmx.util_pygame import load_pygame
 import Map
 import Player
 import Sinkhole
+import WaveGenerator
 
 
 def main():
@@ -37,15 +38,14 @@ def main():
     # FPS
     fps = 30
 
-    sinkhole = Sinkhole.Sinkhole(tiled_map)
+    waveGenerator = WaveGenerator.WaveGenerator(tiled_map)
+    waveGenerator.generateCanion(10)
     # sinkhole.generateSinkhole(10, 10, 5, 10)
     # sinkhole.generateSinkhole(80, 82, 10, 5)
 
     count = 0
     # sinkhole.generateCanion(80, 80, 5)
 
-    sinkhole.generateCanion(80, 69, 10)
-    sinkhole.generateCanion(80, 79, 10)
     # Start loop
     while not done:
         # Spawn random water sinkholes
