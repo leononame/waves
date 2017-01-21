@@ -66,7 +66,14 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     # escape exits game
                     if event.key == pygame.K_ESCAPE:
-                        pygame.event.post(pygame.event.Event(pygame.QUIT))
+                        done = True
+                        # Render
+                        current_map.render(self.screen)
+                        player.render(self.screen)
+                        self.screen_overlay()
+                        pygame.display.flip()
+                        return None
+                        # pygame.event.post(pygame.event.Event(pygame.QUIT))
                     key = event.key
                     # pass keys to map if player is not colliding in order to move camera
                     if not player.is_colliding(key, tiled_map):
@@ -83,8 +90,7 @@ class Game:
             # flip screen
             pygame.display.flip()
 
-    # Display a game over message
-    def display_game_over(self):
+    def screen_overlay(self):
         # new surface
         s = pygame.Surface((self.screen.get_width(), self.screen.get_height()))
         # Set transparent
@@ -92,6 +98,10 @@ class Game:
         # Fill black
         s.fill((0, 0, 0))  # this fills the entire surface
         self.screen.blit(s, (0, 0))  # (0,0) are the top-left coordinates
+
+    # Display a game over message
+    def display_game_over(self):
+        self.screen_overlay()
         # GUI Tile
         gui_tiles = Utils.load_image("assets/RPG GUI/RPG_GUI_v1.png")
         self.screen.blit(gui_tiles, (100, 100), pygame.Rect(15, 115, 300, 80))

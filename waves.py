@@ -3,9 +3,10 @@ import Game
 
 def main():
     game = Game.Game()
-    game.run()
-    while(game.wants_repeat()):
+    repeat = True
+    while repeat:
         game.run()
+        repeat = game.wants_repeat()
 
 
 if __name__ == '__main__':
