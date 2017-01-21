@@ -111,13 +111,19 @@ class Sinkhole:
     def kill_tree(self, xpos, ypos):
         if not self.is_tree(xpos, ypos):
             return None
+        # This is an empty tile
+        # Get gid to non-existent tile
         invisible_gid = self.tiled_map.layers[3].data[3][0]
-        # self.tiled_map.layers[5].data[80][75] = invisible_gid
-        self.tiled_map.layers[5].data[ypos][xpos] = invisible_gid
+        # Remove collision layer
+        self.tiled_map.layers[2].data[ypos][xpos] = invisible_gid
+        # Remove tree trunk layer
+        self.tiled_map.layers[6].data[ypos][xpos] = invisible_gid
+        # Remove all tree tiles in tree layer
         for x in range(xpos - 1, xpos + 2):
             for y in range(ypos - 3, ypos + 1):
                 self.tiled_map.layers[5].data[y][x] = invisible_gid
 
+    # Returns true if there is a tree at that tile
     def is_tree(self, xpos, ypos):
         return self.tiled_map.get_tile_image(xpos, ypos, 6) is not None
 
