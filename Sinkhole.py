@@ -1,5 +1,7 @@
 import random
 
+import Utils
+
 
 class Sinkhole:
     def __init__(self, tiled_map):
@@ -111,17 +113,14 @@ class Sinkhole:
     def kill_tree(self, xpos, ypos):
         if not self.is_tree(xpos, ypos):
             return None
-        # This is an empty tile
-        # Get gid to non-existent tile
-        invisible_gid = self.tiled_map.layers[3].data[3][0]
         # Remove collision layer
-        self.tiled_map.layers[2].data[ypos][xpos] = invisible_gid
+        Utils.remove_tile(xpos, ypos, self.tiled_map, 2)
         # Remove tree trunk layer
-        self.tiled_map.layers[6].data[ypos][xpos] = invisible_gid
+        Utils.remove_tile(xpos, ypos, self.tiled_map, 6)
         # Remove all tree tiles in tree layer
         for x in range(xpos - 1, xpos + 2):
             for y in range(ypos - 3, ypos + 1):
-                self.tiled_map.layers[5].data[y][x] = invisible_gid
+                Utils.remove_tile(x, y, self.tiled_map, 5)
 
     # Returns true if there is a tree at that tile
     def is_tree(self, xpos, ypos):

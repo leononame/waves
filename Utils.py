@@ -15,5 +15,13 @@ def load_image(filename, color_key=None):
 
     return image
 
+
 def rotate(l, n):
     return l[-n:] + l[:-n]
+
+
+def remove_tile(x, y, tile_map, layer):
+    # This is an empty tile
+    # Get gid to non-existent tile
+    invisible_gid = tile_map.layers[3].data[3][0]
+    tile_map.layers[layer].data[y][x] = invisible_gid
