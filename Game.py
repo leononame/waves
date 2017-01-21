@@ -129,7 +129,8 @@ class Game:
                         elif not player.carrying_log and player.is_standing_on_log(tiled_map) and debounced_space:
                             player.pick_up_log(tiled_map)
                             debounced_space = False
-                        elif player.carrying_log and debounced_space:
+                        # elif player.carrying_log and player.can_throw_log(tiled_map) and debounced_space:
+                        elif player.carrying_log and player.can_throw_log(tiled_map) and debounced_space:
                             player.throw_log(tiled_map)
                             debounced_space = False
                     # ALT key for secondary action
@@ -139,7 +140,7 @@ class Game:
                         if not player.carrying_log and player.is_standing_on_log(tiled_map, False) and debounced_alt:
                             player.pick_up_log(tiled_map, False)
                             debounced_alt = False
-                        elif player.carrying_log and debounced_space:
+                        elif player.carrying_log and player.can_throw_log(tiled_map, False) and debounced_alt:
                             player.throw_log(tiled_map, False)
                             debounced_alt = False
 

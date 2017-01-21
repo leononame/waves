@@ -152,6 +152,46 @@ class Player(object):
             Utils.remove_tile(self.map_x, self.map_y, tile_map, 7)
             Utils.remove_tile(self.map_x + 1, self.map_y, tile_map, 7)
 
+    def can_throw_log(self, tile_map, offset = True):
+        retval = True
+        return True
+        if offset:
+            if self.dir == self.__right:
+                # Log layer must be empty
+                retval = retval and tile_map.get_tile_image(self.map_x + 2, self.map_y, 7) is None
+                retval = retval and tile_map.get_tile_image(self.map_x + 3, self.map_y, 7) is None
+                # Trunk layer must be empty
+                retval = retval and tile_map.get_tile_image(self.map_x + 2, self.map_y, 6) is None
+                retval = retval and tile_map.get_tile_image(self.map_x + 3, self.map_y, 6) is None
+            elif self.dir == self.__left:
+                # Log layer must be empty
+                retval = retval and tile_map.get_tile_image(self.map_x - 1, self.map_y, 7) is None
+                retval = retval and tile_map.get_tile_image(self.map_x - 2, self.map_y, 7) is None
+                # Trunk layer must be empty
+                retval = retval and tile_map.get_tile_image(self.map_x - 1, self.map_y, 6) is None
+                retval = retval and tile_map.get_tile_image(self.map_x - 2, self.map_y, 6) is None
+            elif self.dir == self.__down:
+                # Log layer must be empty
+                retval = retval and tile_map.get_tile_image(self.map_x, self.map_y + 1, 7) is None
+                retval = retval and tile_map.get_tile_image(self.map_x + 1, self.map_y + 1, 7) is None
+                # Trunk layer must be empty
+                retval = retval and tile_map.get_tile_image(self.map_x, self.map_y + 1, 6) is None
+                retval = retval and tile_map.get_tile_image(self.map_x + 1, self.map_y + 1, 6) is None
+            elif self.dir == self.__up:
+                # Log layer must be empty
+                retval = retval and tile_map.get_tile_image(self.map_x, self.map_y - 1, 7) is None
+                retval = retval and tile_map.get_tile_image(self.map_x + 1, self.map_y - 1, 7) is None
+                # Trunk layer must be empty
+                retval = retval and tile_map.get_tile_image(self.map_x, self.map_y - 1, 6) is None
+                retval = retval and tile_map.get_tile_image(self.map_x + 1, self.map_y - 1, 6) is None
+        else:
+            # Log layer must be empty
+            retval = retval and tile_map.get_tile_image(self.map_x, self.map_y, 7) is None
+            retval = retval and tile_map.get_tile_image(self.map_x + 1, self.map_y, 7) is None
+
+        return retval
+
+
     def throw_log(self, tile_map, offset=True):
         self.carrying_log = False
         if offset:
