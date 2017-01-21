@@ -30,6 +30,41 @@ class Game:
         # FPS
         self.fps = 30
 
+        # Display start screen
+        # Fill screen
+        self.screen.fill((0, 0, 0))
+        # Initialize font
+        font = pygame.font.SysFont("monospace", 40)
+        # Render text
+        label = font.render("Press space to start...", 1, (204, 153, 0))
+        self.screen.blit(label, (135, 115))
+        # Flip display
+        pygame.display.flip()
+        start = False
+        while not start:
+            # Check events
+            # Get all events
+            for event in pygame.event.get():
+                # controls
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        # Display waiting screen
+                        # Fill screen
+                        self.screen.fill((0, 0, 0))
+                        # Initialize font
+                        font = pygame.font.SysFont("monospace", 40)
+                        # Render text
+                        label = font.render("Loading map...", 1, (204, 153, 0))
+                        self.screen.blit(label, (135, 115))
+                        # Flip display
+                        pygame.display.flip()
+                        start = True
+                    # exit
+                    if event.key == pygame.K_ESCAPE:
+                        exit(0)
+
+
+
     def run(self):
         # Player position
         player_dx = int(self.scr_width / 32 / 2) - 1
@@ -73,7 +108,6 @@ class Game:
                         self.screen_overlay()
                         pygame.display.flip()
                         return None
-                        # pygame.event.post(pygame.event.Event(pygame.QUIT))
                     key = event.key
                     # pass keys to map if player is not colliding in order to move camera
                     if not player.is_colliding(key, tiled_map):
@@ -129,6 +163,16 @@ class Game:
                     if event.key == pygame.K_ESCAPE:
                         pygame.event.post(pygame.event.Event(pygame.QUIT))
                     if event.key == pygame.K_SPACE:
+                        # Display waiting screen
+                        # Fill screen
+                        self.screen.fill((0, 0, 0))
+                        # Initialize font
+                        font = pygame.font.SysFont("monospace", 40)
+                        # Render text
+                        label = font.render("Loading map...", 1, (204, 153, 0))
+                        self.screen.blit(label, (135, 115))
+                        # Flip display
+                        pygame.display.flip()
                         return True
         return False
 
