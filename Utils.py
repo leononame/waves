@@ -37,3 +37,12 @@ def fell_tree_at(xpos, ypos, tile_map):
         for y in range(ypos - 3, ypos + 1):
             # Remove tiles from layer 5 (tree layer)
             remove_tile(x, y, tile_map, 5)
+
+
+# If a plyer fells a tree, logs should be generated
+def generate_logs(xpos, ypos, tile_map):
+    # This is the log tile
+    log_gid = tile_map.layers[3].data[3][1]
+    # Add logs to log layer
+    for i in range (-1, 2):
+        tile_map.layers[7].data[ypos][xpos + i] = log_gid

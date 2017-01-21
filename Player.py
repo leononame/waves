@@ -142,4 +142,5 @@ class Player(object):
                 y = self.map_y - 1
         if x is not None and y is not None:
             Utils.fell_tree_at(x, y, tile_map)
+            Utils.generate_logs(x, y, tile_map)
 

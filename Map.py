@@ -37,13 +37,12 @@ class Map(object):
                     if image is not None:
                         screen.blit(image, (x * 32, y * 32))
 
-
     def render(self, screen):
         self.counter += 1
         if self.counter == self.animation_duration:
             self.counter = 0
 
-        for layer in [0, 1, 4, 5]: # ground, fringe, water, trees
+        for layer in [0, 1, 4, 5, 7]: # ground, fringe, water, trees, logs
             for x in range(0, screen.get_width() / 32):
                 for y in range(0, screen.get_height() / 32):
                     tx = x + self.camera_x
