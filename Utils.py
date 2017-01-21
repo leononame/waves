@@ -53,3 +53,6 @@ def add_log(xpos, ypos, tile_map):
     log_gid = tile_map.layers[3].data[3][1]
     # Add logs to log layer
     tile_map.layers[7].data[ypos][xpos] = log_gid
+    # Remove collision from collison layer
+    if tile_map.get_tile_image(xpos, ypos, 2) is not None:
+        remove_tile(xpos, ypos, tile_map, 2)
