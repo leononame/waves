@@ -14,7 +14,7 @@
 0,0,0,0,0,0
 </data>
  </layer>
- <layer name="input_tmp" width="6" height="6">
+ <layer name="input_tree_seed" width="6" height="6">
   <data encoding="csv">
 140,141,142,0,0,0,
 153,154,155,0,0,0,
