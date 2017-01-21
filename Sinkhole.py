@@ -104,9 +104,22 @@ class Sinkhole:
             xpos, ypos = self.spreadWave(xpos, ypos, neg_dir)
 
             self.changeToWater(xpos, ypos)
+            self.kill_tree(xpos, ypos)
             # Change neighbour tile from original tile too
             self.fillNeighbour(xpos, ypos, xpos_old, ypos_old, neg_dir)
 
+    def kill_tree(self, xpos, ypos):
+        if not self.is_tree(xpos, ypos):
+            return None
+        invisible_gid = self.tiled_map.layers[3].data[3][0]
+        # self.tiled_map.layers[5].data[80][75] = invisible_gid
+        self.tiled_map.layers[5].data[ypos][xpos] = invisible_gid
+        for x in range(xpos - 1, xpos + 2):
+            for y in range(ypos - 3, ypos + 1):
+                self.tiled_map.layers[5].data[y][x] = invisible_gid
+
+    def is_tree(self, xpos, ypos):
+        return self.tiled_map.get_tile_image(xpos, ypos, 6) is not None
 
     def fillNeighbour(self, xpos, ypos, xpos_old, ypos_old, d):
         if d is self.up or d is self.down:
@@ -120,6 +133,7 @@ class Sinkhole:
         self.ground_layer.data[y][x] = self.w
         # Change collison layer
         self.collision_layer.data[y][x] = self.w
+        self.kill_tree(x, y)
     ## Waves
 
 

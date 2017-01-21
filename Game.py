@@ -88,7 +88,7 @@ class Game:
         tree_num = 0
         while not done:
             # Generate sinkholes
-            # sinkhole.generateWave(random.randint(70, 300), random.randint(70, 300), random.randint(10, 30))
+            sinkhole.generateWave(random.randint(70, 300), random.randint(70, 300), random.randint(10, 30))
             self.clock.tick(self.fps)
             # Fill screen
             self.screen.fill((198, 209, 255))
