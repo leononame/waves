@@ -127,14 +127,7 @@ class Player(object):
             elif self.dir == self.__up:
                 return tile_map.get_tile_image(self.map_x, self.map_y - 1, 7) is not None and tile_map.get_tile_image(self.map_x + 1, self.map_y - 1, 7) is not None
         else:
-            if self.dir == self.__right:
-                 return tile_map.get_tile_image(self.map_x + 1, self.map_y, 7) is not None
-            elif self.dir == self.__left:
-                return tile_map.get_tile_image(self.map_x - 1, self.map_y, 7) is not None
-            elif self.dir == self.__down:
-                return tile_map.get_tile_image(self.map_x, self.map_y + 1, 7) is not None
-            elif self.dir == self.__up:
-                return tile_map.get_tile_image(self.map_x, self.map_y - 1, 7) is not None
+         return tile_map.get_tile_image(self.map_x, self.map_y, 7) is not None and tile_map.get_tile_image(self.map_x + 1, self.map_y, 7) is not None
 
     def pick_up_log(self, tile_map, offset = True):
         # If offset is True, we pick up the log in front of us
@@ -156,14 +149,8 @@ class Player(object):
                 Utils.remove_tile(self.map_x + 1, self.map_y - 1, tile_map, 7)
         else:
             # Remove log from log layer
-            if self.dir == self.__right:
-                Utils.remove_tile(self.map_x + 1, self.map_y, tile_map, 7)
-            elif self.dir == self.__left:
-                Utils.remove_tile(self.map_x - 1, self.map_y, tile_map, 7)
-            elif self.dir == self.__down:
-                Utils.remove_tile(self.map_x, self.map_y + 1, tile_map, 7)
-            elif self.dir == self.__up:
-                Utils.remove_tile(self.map_x, self.map_y - 1, tile_map, 7)
+            Utils.remove_tile(self.map_x, self.map_y, tile_map, 7)
+            Utils.remove_tile(self.map_x + 1, self.map_y, tile_map, 7)
 
     def throw_log(self, tile_map, offset=True):
         self.carrying_log = False
@@ -180,6 +167,9 @@ class Player(object):
             elif self.dir == self.__up:
                 Utils.add_log(self.map_x, self.map_y - 1, tile_map)
                 Utils.add_log(self.map_x + 1, self.map_y - 1, tile_map)
+        else:
+            Utils.add_log(self.map_x, self.map_y, tile_map)
+            Utils.add_log(self.map_x + 1, self.map_y, tile_map)
 
 
     def fell_tree(self, tile_map):

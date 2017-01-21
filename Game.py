@@ -85,7 +85,8 @@ class Game:
         sinkhole = Sinkhole.Sinkhole(tiled_map)
         # Flow control
         done = False
-        debounced = False
+        debounced_space = False
+        debounced_alt = True
         while not done:
             # Generate sinkholes
             # sinkhole.generateWave(random.randint(70, 300), random.randint(70, 300), random.randint(10, 30))
@@ -95,8 +96,11 @@ class Game:
             # Check events
             # Get all events
             for event in pygame.event.get():
-                if event.type == pygame.KEYUP and event.key == pygame.K_SPACE:
-                    debounced = True
+                if event.type == pygame.KEYUP:
+                    if event.key == pygame.K_SPACE:
+                        debounced_space = True
+                    if event.key == pygame.K_RALT or event.key == pygame.K_LALT:
+                        debounced_alt = True
                 # exit game
                 if event.type == pygame.QUIT:
                     done = True
@@ -119,15 +123,26 @@ class Game:
                     if event.key == pygame.K_SPACE:
                         # Fell tree if possible
                         if player.is_in_front_of_tree(tiled_map):
-                            debounced = False
+                            debounced_space = False
                             player.fell_tree(tiled_map)
                         # Pick up log if possible
-                        elif not player.carrying_log and player.is_standing_on_log(tiled_map) and debounced:
+                        elif not player.carrying_log and player.is_standing_on_log(tiled_map) and debounced_space:
                             player.pick_up_log(tiled_map)
-                            debounced = False
-                        elif player.carrying_log and debounced:
+                            debounced_space = False
+                        elif player.carrying_log and debounced_space:
                             player.throw_log(tiled_map)
-                            debounced = False
+                            debounced_space = False
+                    # ALT key for secondary action
+                    if event.key == pygame.K_LALT or event.key == pygame.K_RALT:
+                        # Pick up log if possible
+                        # ALT key picks up logs you are standing on
+                        if not player.carrying_log and player.is_standing_on_log(tiled_map, False) and debounced_alt:
+                            player.pick_up_log(tiled_map, False)
+                            debounced_alt = False
+                        elif player.carrying_log and debounced_space:
+                            player.throw_log(tiled_map, False)
+                            debounced_alt = False
+
 
             # Render
             current_map.render(self.screen)
