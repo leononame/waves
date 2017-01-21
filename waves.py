@@ -5,6 +5,7 @@ from pytmx.util_pygame import load_pygame
 
 import Map
 import Player
+import Utils
 
 
 def generateSinkhole(tiled_map, xpos, ypos, width, height):
@@ -47,6 +48,25 @@ def generateSinkhole(tiled_map, xpos, ypos, width, height):
                 collision_layer.data[ypos + j][xpos + i] = pos
 
 
+# Display a game over message
+def display_game_over(screen):
+    # new surface
+    s = pygame.Surface((screen.get_width(), screen.get_height()))
+    # Set transparent
+    s.set_alpha(128)
+    # Fill black
+    s.fill((0, 0, 0))  # this fills the entire surface
+    screen.blit(s, (0, 0))  # (0,0) are the top-left coordinates
+    # Initialize font
+    font = pygame.font.SysFont("monospace", 75)
+    # Render text
+    label = font.render("Game Over", 1, (204, 153, 0))
+    screen.blit(label, (100, 100))
+    # Flip display
+    pygame.display.flip()
+    return True
+
+
 def main():
     pygame.init()
     tile_size = 32
@@ -84,7 +104,7 @@ def main():
         count += 1
         if count is fps / 2:
             count = 0
-        generateSinkhole(tiled_map, random.randint(70, 300), random.randint(70, 300), random.randint(3, 12), random.randint(3,8))
+        generateSinkhole(tiled_map, random.randint(70, 300), random.randint(70, 300), random.randint(3, 12), random.randint(3, 8))
         clock.tick(fps)
         # fill screen
         screen.fill((198, 209, 255))
@@ -107,8 +127,30 @@ def main():
 
         current_map.render(screen)
         player.render(screen)
+
+        if player.is_dead(tiled_map):
+            done = True
+            display_game_over(screen)
+
+        done = True
+        display_game_over(screen)
         # flip screen
         pygame.display.flip()
+
+    exit = False
+    while not exit:
+        clock.tick(fps)
+        # Get all events
+        for event in pygame.event.get():
+            # exit game
+            if event.type == pygame.QUIT:
+                exit = True
+
+            # controls
+            if event.type == pygame.KEYDOWN:
+                # escape exits game
+                if event.key == pygame.K_ESCAPE:
+                    pygame.event.post(pygame.event.Event(pygame.QUIT))
 
 
 if __name__ == '__main__':

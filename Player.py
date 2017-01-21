@@ -87,3 +87,8 @@ class Player(object):
 
     def is_collision(self, x, y, map):
         return map.get_tile_image(x, y, 2) is not None
+
+    # Check if player is dead
+    def is_dead(self, tile_map):
+        # Player is dead if he is on a collision tile (a wave hit him)
+        return tile_map.get_tile_image(self.map_x, self.map_y, 2) is not None
