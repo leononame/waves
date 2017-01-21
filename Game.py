@@ -116,6 +116,7 @@ class Game:
             # Render
             current_map.render(self.screen)
             player.render(self.screen)
+            current_map.render_ontop_of_player(self.screen)
 
             if player.is_dead(tiled_map):
                 done = True
