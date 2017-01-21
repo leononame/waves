@@ -154,7 +154,6 @@ class Player(object):
 
     def can_throw_log(self, tile_map, offset = True):
         retval = True
-        return True
         if offset:
             if self.dir == self.__right:
                 # Log layer must be empty
