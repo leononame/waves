@@ -165,16 +165,21 @@ class Player(object):
             elif self.dir == self.__up:
                 Utils.remove_tile(self.map_x, self.map_y - 1, tile_map, 7)
 
-    def throw_log(self, tile_map, offset=0):
+    def throw_log(self, tile_map, offset=True):
         self.carrying_log = False
-        if self.dir == self.__right:
-            Utils.add_log(self.map_x + 1, self.map_y, tile_map)
-        elif self.dir == self.__left:
-            Utils.add_log(self.map_x - 1, self.map_y, tile_map)
-        elif self.dir == self.__down:
-            Utils.add_log(self.map_x + offset, self.map_y + 1, tile_map)
-        elif self.dir == self.__up:
-            Utils.add_log(self.map_x + offset, self.map_y - 1, tile_map)
+        if offset:
+            if self.dir == self.__right:
+                Utils.add_log(self.map_x + 2, self.map_y, tile_map)
+                Utils.add_log(self.map_x + 3, self.map_y, tile_map)
+            elif self.dir == self.__left:
+                Utils.add_log(self.map_x - 1, self.map_y, tile_map)
+                Utils.add_log(self.map_x - 2, self.map_y, tile_map)
+            elif self.dir == self.__down:
+                Utils.add_log(self.map_x, self.map_y + 1, tile_map)
+                Utils.add_log(self.map_x + 1, self.map_y + 1, tile_map)
+            elif self.dir == self.__up:
+                Utils.add_log(self.map_x, self.map_y - 1, tile_map)
+                Utils.add_log(self.map_x + 1, self.map_y - 1, tile_map)
 
 
     def fell_tree(self, tile_map):
