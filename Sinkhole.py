@@ -15,6 +15,54 @@ class Sinkhole:
         self.l, self.w, self.r = self.asset_layer.data[1][0], self.asset_layer.data[1][1], self.asset_layer.data[1][2]
         self.bottoml, self.bottom, self.bottomr = self.asset_layer.data[2][0], self.asset_layer.data[2][1], self.asset_layer.data[2][2]
 
+        # directions
+        self.up = 0
+        self.down = 1
+        self.left = 2
+        self.right = 3
+
+    def negateDirection(self, d):
+        if d is self.up:
+            return self.down
+        if d is self.down:
+            return self.up
+        if d is self.left:
+            return self.right
+        if d is self.right:
+            return self.left
+
+    def spreadWave(self, xpos, ypos, d):
+        if d is self.up:
+            dy = -1
+            dx = random.randint(-1, 1)
+        if d is self.down:
+            dy = 1
+            dx = random.randint(-1, 1)
+        if d is self.left:
+            dx = -1
+            dy = random.randint(-1, 1)
+        if d is self.right:
+            dx = 1
+            dy = random.randint(-1, 1)
+        return (xpos + dx, ypos + dy)
+
+    def generateWave(self, xpos, ypos, N):
+        # Check pos moves the starting position to water if necessary
+        direction = random.randint(0, 3)
+        xpos, ypos = self.checkPos(xpos, ypos, direction)
+
+        # waves spread in negative direction of water search direction
+        neg_dir = self.negateDirection(direction)
+        for i in range(N):
+            xpos, ypos = self.spreadWave(xpos, ypos, neg_dir)
+
+            # Change gid in fringe and ground layers
+            self.fringe_layer.data[ypos][xpos] = self.w
+            self.ground_layer.data[ypos ][xpos] = self.w
+            # Change collison layer
+            self.collision_layer.data[ypos][xpos] = self.w
+
+
     def generateSinkhole(self, xpos, ypos, width, height):
 
         # Check pos moves the starting position to water if necessary
