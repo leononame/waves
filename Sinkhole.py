@@ -15,6 +15,8 @@ class Sinkhole:
         self.topl, self.top, self.topr = self.asset_layer.data[0][0], self.asset_layer.data[0][1], self.asset_layer.data[0][2]
         self.l, self.w, self.r = self.asset_layer.data[1][0], self.asset_layer.data[1][1], self.asset_layer.data[1][2]
         self.bottoml, self.bottom, self.bottomr = self.asset_layer.data[2][0], self.asset_layer.data[2][1], self.asset_layer.data[2][2]
+        # gids for outer corners
+        self.outer_topr, self.outer_bottomr, self.outer_topl, self.outer_bottoml = self.asset_layer.data[1][3], self.asset_layer.data[2][3], self.asset_layer.data[1][4], self.asset_layer.data[2][4]
         # gid for Grass
         self.grass = self.asset_layer.data[0][3]
 
@@ -147,6 +149,19 @@ class Sinkhole:
             self.changeToWater(xpos, ypos)
             #  ... and then the borders at the adjacent tiles
             self.changeToBorder(xpos, ypos, neg_dir, False)
+            if i == 0:
+                if neg_dir == self.down:
+                    self.fringe_layer.data[ypos][xpos - 1] = self.outer_topl
+                    self.fringe_layer.data[ypos][xpos + 1] = self.outer_topr
+                if neg_dir == self.up:
+                    self.fringe_layer.data[ypos][xpos - 1] = self.outer_bottoml
+                    self.fringe_layer.data[ypos][xpos + 1] = self.outer_bottomr
+                if neg_dir == self.right:
+                    self.fringe_layer.data[ypos - 1][xpos] = self.outer_bottomr
+                    self.fringe_layer.data[ypos + 1][xpos] = self.outer_topr
+                if neg_dir == self.left:
+                    self.fringe_layer.data[ypos - 1][xpos] = self.outer_bottoml
+                    self.fringe_layer.data[ypos + 1][xpos] = self.outer_topl
 
         self.changeToBorder(xpos, ypos, neg_dir, True)
 
