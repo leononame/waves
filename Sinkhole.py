@@ -14,6 +14,8 @@ class Sinkhole:
         self.topl, self.top, self.topr = self.asset_layer.data[0][0], self.asset_layer.data[0][1], self.asset_layer.data[0][2]
         self.l, self.w, self.r = self.asset_layer.data[1][0], self.asset_layer.data[1][1], self.asset_layer.data[1][2]
         self.bottoml, self.bottom, self.bottomr = self.asset_layer.data[2][0], self.asset_layer.data[2][1], self.asset_layer.data[2][2]
+        # gid for Grass
+        self.grass = self.asset_layer.data[0][3]
 
         # directions
         self.up = 0
@@ -38,10 +40,48 @@ class Sinkhole:
         # Change collison layer
         self.collision_layer.data[ypos][xpos] = self.w
 
-    # def changeToBorder(self, xpos, ypos, d):
-    #     if d is self.up or d is self.down:
-    #
-    #     if d is self.left or d is self.right:
+    def changeToBorder(self, xpos, ypos, d):
+        # tiles with assets (borders and corners) are replaced with water.
+        # if adjacent tile is water, don't set an asset. Instead set water too.
+        if d is self.up or d is self.down:
+            # left and right adjacent tiles with assets -> water
+            if self.isAsset(xpos - 1, ypos, 0, 0): self.changeToWater(xpos - 1, ypos)
+            if self.isAsset(xpos + 1, ypos, 0, 0): self.changeToWater(xpos + 1, ypos)
+            # left and right adjacent tiles with water -> stay water
+            if self.getType(xpos - 1, ypos) is self.w: self.changeToWater(xpos - 1, ypos)
+            if self.getType(xpos + 1, ypos) is self.w: self.changeToWater(xpos + 1, ypos)
+            # left and right adjacent tiles with grass -> l, r border
+            if self.getType(xpos - 1, ypos) is self.grass:
+                self.fringe_layer.data[ypos][xpos - 1] = self.left
+                self.ground_layer.data[ypos][xpos - 1] = self.left
+                # self.collision_layer.data[ypos][xpos - 1] = self.left
+            if self.getType(xpos + 1, ypos) is self.grass:
+                #self.fringe_layer.data[ypos][xpos + 1] = self.right
+                self.ground_layer.data[ypos][xpos + 1] = self.right
+                # self.collision_layer.data[ypos][xpos + 1] = self.right
+
+
+        if d is self.left or d is self.right:
+            # top and bottom adjacent tiles with assets -> water
+            if(self.isAsset(xpos, ypos + 1, 0, 0)): self.changeToWater(xpos, ypos + 1)
+            if(self.isAsset(xpos, ypos - 1, 0, 0)): self.changeToWater(xpos, ypos - 1)
+            # top and bottom adjacent tiles with water -> stay water
+            if self.getType(xpos, ypos + 1) is self.w: self.changeToWater(xpos, ypos + 1)
+            if self.getType(xpos, ypos - 1) is self.w: self.changeToWater(xpos, ypos - 1)
+
+            # top and bottom adjacent tiles with grass -> t, b border
+            if self.getType(xpos, ypos + 1) is self.grass:
+                self.fringe_layer.data[ypos + 1][xpos] = self.bottom
+                self.ground_layer.data[ypos + 1][xpos] = self.bottom
+                # self.collision_layer.data[ypos][xpos - 1] = self.left
+            if self.getType(xpos, ypos - 1) is self.grass:
+                self.fringe_layer.data[ypos - 1][xpos] = self.top
+                self.ground_layer.data[ypos - 1][xpos] = self.top
+                # self.collision_layer.data[ypos][xpos + 1] = self.right
+
+
+
+
 
 
 
@@ -63,16 +103,22 @@ class Sinkhole:
             dy = 0
         return (xpos + dx, ypos + dy)
 
-    def generateCanion(self, xpos, ypos, d, len):
+    def generateCanion(self, xpos, ypos, len):
         # Check pos moves the starting position to water if necessary
         direction = random.randint(0, 3)
+        direction = self.left
         xpos, ypos = self.checkPos(xpos, ypos, direction)
+        print("At pos: (" + str(xpos) + ', ' + str(ypos) + ')')
         neg_dir = self.negateDirection(direction)
 
+        print("Entering loop")
         for i in range(len):
             xpos, ypos = self.spreadCanion(xpos, ypos, neg_dir)
+            print("Changing tile: (" + str(xpos) + ', ' + str(ypos) + ')')
 
             self.changeToWater(xpos, ypos)
+            self.changeToBorder(xpos, ypos, neg_dir)
+
 
     # WAVES
     # Waves can spread in diagonal neighbour tiles
@@ -188,12 +234,16 @@ class Sinkhole:
             return (xpos, ypos)
         else:
             if direction is 0: # move up
+                print("Going to: (" + str(xpos) + ', ' + str(ypos) + ')')
                 return self.checkPos(xpos, ypos - 1, direction)
             if direction is 1: # move down
+                print("Going to: (" + str(xpos) + ', ' + str(ypos) + ')')
                 return self.checkPos(xpos, ypos + 1, direction)
             if direction is 2: # move left
+                print("Going to: (" + str(xpos) + ', ' + str(ypos) + ')')
                 return self.checkPos(xpos - 1, ypos, direction)
             if direction is 3: # mover right
+                print("Going to: (" + str(xpos) + ', ' + str(ypos) + ')')
                 return self.checkPos(xpos + 1, ypos, direction)
 
 
@@ -203,3 +253,6 @@ class Sinkhole:
 
     def isAsset(self, xpos, ypos, i, j):
         return self.fringe_layer.data[ypos + j][xpos + i] in [self.topl, self.top, self.topr, self.l, self.w, self.r, self.bottom, self.bottomr, self.bottoml]
+
+    def getType(self, xpos, ypos):
+        return self.ground_layer.data[ypos][xpos]
