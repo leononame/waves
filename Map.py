@@ -25,7 +25,7 @@ class Map(object):
         if self.counter == self.animation_duration:
             self.counter = 0
 
-        for layer in [0, 1, 4]: # ground, fringe, water
+        for layer in [0, 1, 4, 5]: # ground, fringe, water, trees
             for x in range(0, screen.get_width() / 32):
                 for y in range(0, screen.get_height() / 32):
                     tx = x + self.camera_x
