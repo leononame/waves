@@ -52,13 +52,11 @@ class Sinkhole:
             if self.getType(xpos + 1, ypos) is self.w: self.changeToWater(xpos + 1, ypos)
             # left and right adjacent tiles with grass -> l, r border
             if self.getType(xpos - 1, ypos) is self.grass:
-                self.fringe_layer.data[ypos][xpos - 1] = self.left
-                self.ground_layer.data[ypos][xpos - 1] = self.left
-                # self.collision_layer.data[ypos][xpos - 1] = self.left
+                self.fringe_layer.data[ypos][xpos - 1] = self.l
+                # self.collision_layer.data[ypos][xpos - 1] = self.l
             if self.getType(xpos + 1, ypos) is self.grass:
-                #self.fringe_layer.data[ypos][xpos + 1] = self.right
-                self.ground_layer.data[ypos][xpos + 1] = self.right
-                # self.collision_layer.data[ypos][xpos + 1] = self.right
+                self.fringe_layer.data[ypos][xpos + 1] = self.r
+                # self.collision_layer.data[ypos][xpos + 1] = self.r
 
 
         if d is self.left or d is self.right:
@@ -72,12 +70,10 @@ class Sinkhole:
             # top and bottom adjacent tiles with grass -> t, b border
             if self.getType(xpos, ypos + 1) is self.grass:
                 self.fringe_layer.data[ypos + 1][xpos] = self.bottom
-                self.ground_layer.data[ypos + 1][xpos] = self.bottom
-                # self.collision_layer.data[ypos][xpos - 1] = self.left
+                # self.collision_layer.data[ypos][xpos - 1] = self.l
             if self.getType(xpos, ypos - 1) is self.grass:
                 self.fringe_layer.data[ypos - 1][xpos] = self.top
-                self.ground_layer.data[ypos - 1][xpos] = self.top
-                # self.collision_layer.data[ypos][xpos + 1] = self.right
+                self.collision_layer.data[ypos - 1][xpos] = self.top
 
 
 
@@ -106,7 +102,6 @@ class Sinkhole:
     def generateCanion(self, xpos, ypos, len):
         # Check pos moves the starting position to water if necessary
         direction = random.randint(0, 3)
-        direction = self.left
         xpos, ypos = self.checkPos(xpos, ypos, direction)
         print("At pos: (" + str(xpos) + ', ' + str(ypos) + ')')
         neg_dir = self.negateDirection(direction)

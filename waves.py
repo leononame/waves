@@ -43,15 +43,17 @@ def main():
 
     count = 0
     sinkhole.generateCanion(80, 80, 5)
+
+
     # Start loop
     while not done:
         # Spawn random water sinkholes
-        # count += 1
-        # if count is fps / 5:
-        #     count = 0
-        #     # sinkhole.generateSinkhole(random.randint(70, 300), random.randint(70, 300), random.randint(3, 12), random.randint(3,8))
-        #     #sinkhole.generateWave(random.randint(70, 300), random.randint(70, 300), random.randint(10, 30))
-        #     sinkhole.generateCanion(random.randint(70, 300), random.randint(70, 300), random.randint(10, 30))
+        count += 1
+        if count is fps / 5:
+            count = 0
+            # sinkhole.generateSinkhole(random.randint(70, 300), random.randint(70, 300), random.randint(3, 12), random.randint(3,8))
+            #sinkhole.generateWave(random.randint(70, 300), random.randint(70, 300), random.randint(10, 30))
+            sinkhole.generateCanion(random.randint(70, 300), random.randint(70, 300), random.randint(10, 30))
 
 
         clock.tick(fps)
