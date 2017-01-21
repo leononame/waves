@@ -85,7 +85,7 @@ class Game:
         sinkhole = Sinkhole.Sinkhole(tiled_map)
         # Flow control
         done = False
-        tree_num = 0
+        debounced = False
         while not done:
             # Generate sinkholes
             # sinkhole.generateWave(random.randint(70, 300), random.randint(70, 300), random.randint(10, 30))
@@ -95,6 +95,8 @@ class Game:
             # Check events
             # Get all events
             for event in pygame.event.get():
+                if event.type == pygame.KEYUP and event.key == pygame.K_SPACE:
+                    debounced = True
                 # exit game
                 if event.type == pygame.QUIT:
                     done = True
@@ -119,10 +121,13 @@ class Game:
                         if player.is_in_front_of_tree(tiled_map):
                             player.fell_tree(tiled_map)
                         # Pick up log if possible
-                        elif not player.carrying_log and player.is_standing_on_log(tiled_map):
+                        elif not player.carrying_log and player.is_standing_on_log(tiled_map) and debounced:
                             player.pick_up_log(tiled_map)
-                        elif player.carrying_log:
+                            debounced = False
+                        elif player.carrying_log and debounced:
                             player.throw_log(tiled_map)
+                            debounced = False
+
             # Render
             current_map.render(self.screen)
             player.render(self.screen)
