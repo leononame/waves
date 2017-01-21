@@ -85,10 +85,10 @@ class Game:
         sinkhole = Sinkhole.Sinkhole(tiled_map)
         # Flow control
         done = False
-
+        tree_num = 0
         while not done:
             # Generate sinkholes
-            sinkhole.generateWave(random.randint(70, 300), random.randint(70, 300), random.randint(10, 30))
+            # sinkhole.generateWave(random.randint(70, 300), random.randint(70, 300), random.randint(10, 30))
             self.clock.tick(self.fps)
             # Fill screen
             self.screen.fill((198, 209, 255))
@@ -113,12 +113,12 @@ class Game:
                     # pass keys to map if player is not colliding in order to move camera
                     if not player.is_colliding(key, tiled_map):
                         current_map.handle_input(key)
-
             # Render
             current_map.render(self.screen)
             player.render(self.screen)
             current_map.render_ontop_of_player(self.screen)
-
+            if player.is_in_front_of_tree(tiled_map):
+                self.screen_overlay()
             if player.is_dead(tiled_map):
                 done = True
                 self.display_game_over()

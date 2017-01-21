@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="6" height="6" tilewidth="32" tileheight="32" nextobjectid="1">
+ <tileset firstgid="1" source="../tiles/trees_green.tsx"/>
+ <tileset firstgid="29" source="../tiles/trees_autumn.tsx"/>
+ <tileset firstgid="57" source="../tiles/collision.tsx"/>
+ <layer name="regions" width="6" height="6">
+  <data encoding="csv">
+0,0,0,0,0,0,
+27,0,55,0,0,0,
+0,0,0,0,0,0,
+0,0,0,0,0,0,
+0,0,0,0,0,0,
+0,0,0,0,0,0
+</data>
+ </layer>
+ <layer name="input_trees" width="6" height="6">
+  <data encoding="csv">
+0,0,0,0,0,0,
+55,0,27,0,0,0,
+0,0,0,0,0,0,
+0,0,0,0,0,0,
+0,0,0,0,0,0,
+0,0,0,0,0,0
+</data>
+ </layer>
+ <layer name="output_trunks" width="6" height="6">
+  <data encoding="csv">
+0,0,0,0,0,0,
+57,0,57,0,0,0,
+0,0,0,0,0,0,
+0,0,0,0,0,0,
+0,0,0,0,0,0,
+0,0,0,0,0,0
+</data>
+ </layer>
+</map>

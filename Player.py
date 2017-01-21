@@ -86,9 +86,28 @@ class Player(object):
         self.walking = False
 
     def is_collision(self, x, y, map):
+        # Layer 2 is collision layer
         return map.get_tile_image(x, y, 2) is not None
+
+    def __is_trunk(self, x, y, tile_map):
+        # Layer 6 is tree trunk layer
+        return tile_map.get_tile_image(x, y, 6) is not None
 
     # Check if player is dead
     def is_dead(self, tile_map):
         # Player is dead if he is on a collision tile (a wave hit him)
         return tile_map.get_tile_image(self.map_x, self.map_y, 2) is not None
+
+    # Checks if player is looking right at a tree in order to fell it
+    def is_in_front_of_tree(self, map):
+        # Check directions
+        if self.dir == self.__down:
+            # When looking down, we collide when x,y+1 or x+1,y+1
+            return self.__is_trunk(self.map_x, self.map_y + 1, map) or self.__is_trunk(self.map_x + 1, self.map_y + 1, map)
+        elif self.dir == self.__right:
+            return self.__is_trunk(self.map_x + 1, self.map_y, map) or self.__is_trunk(self.map_x + 2, self.map_y, map)
+        elif self.dir == self.__left:
+            return self.__is_trunk(self.map_x - 1, self.map_y, map)
+        elif self.dir == self.__up:
+            return self.__is_trunk(self.map_x, self.map_y - 1, map) or self.__is_trunk(self.map_x + 1, self.map_y - 1, map)
+        return False
