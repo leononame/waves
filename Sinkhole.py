@@ -31,6 +31,52 @@ class Sinkhole:
         if d is self.right:
             return self.left
 
+    def changeToWater(self, xpos, ypos):
+        # Change gid in fringe and ground layers
+        self.fringe_layer.data[ypos][xpos] = self.w
+        self.ground_layer.data[ypos][xpos] = self.w
+        # Change collison layer
+        self.collision_layer.data[ypos][xpos] = self.w
+
+    # def changeToBorder(self, xpos, ypos, d):
+    #     if d is self.up or d is self.down:
+    #
+    #     if d is self.left or d is self.right:
+
+
+
+    # CANIONS
+    # Canions can spread only straight on
+    # Canions affect 3 tile (borders and corners)
+    def spreadCanion(self, xpos, ypos, d):
+        if d is self.up:
+            dy = -1
+            dx = 0
+        if d is self.down:
+            dy = 1
+            dx = 0
+        if d is self.left:
+            dx = -1
+            dy = 0
+        if d is self.right:
+            dx = 1
+            dy = 0
+        return (xpos + dx, ypos + dy)
+
+    def generateCanion(self, xpos, ypos, d, len):
+        # Check pos moves the starting position to water if necessary
+        direction = random.randint(0, 3)
+        xpos, ypos = self.checkPos(xpos, ypos, direction)
+        neg_dir = self.negateDirection(direction)
+
+        for i in range(len):
+            xpos, ypos = self.spreadCanion(xpos, ypos, neg_dir)
+
+            self.changeToWater(xpos, ypos)
+
+    # WAVES
+    # Waves can spread in diagonal neighbour tiles
+    # Temp decission: Waves affect 1-2 tiles (neighbour to avoid gaps). No borders and corners.
     def spreadWave(self, xpos, ypos, d):
         if d is self.up:
             dy = -1
@@ -57,11 +103,7 @@ class Sinkhole:
             xpos_old, ypos_old = xpos, ypos
             xpos, ypos = self.spreadWave(xpos, ypos, neg_dir)
 
-            # Change gid in fringe and ground layers
-            self.fringe_layer.data[ypos][xpos] = self.w
-            self.ground_layer.data[ypos ][xpos] = self.w
-            # Change collison layer
-            self.collision_layer.data[ypos][xpos] = self.w
+            self.changeToWater(xpos, ypos)
             # Change neighbour tile from original tile too
             self.fillNeighbour(xpos, ypos, xpos_old, ypos_old, neg_dir)
 
@@ -78,6 +120,9 @@ class Sinkhole:
         self.ground_layer.data[y][x] = self.w
         # Change collison layer
         self.collision_layer.data[y][x] = self.w
+    ## Waves
+
+
 
 
 
