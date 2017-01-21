@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="32" tileheight="32" nextobjectid="1">
  <tileset firstgid="1" source="../tiles/grass.tsx"/>
- <tileset firstgid="19" name="trees_lpc" tilewidth="32" tileheight="32" tilecount="169" columns="13">
-  <image source="../trees/plant repack.png" width="416" height="416"/>
- </tileset>
- <tileset firstgid="188" name="trees_green" tilewidth="32" tileheight="32" tilecount="28" columns="7">
-  <image source="../trees/green trees_1.png" width="224" height="128"/>
- </tileset>
- <tileset firstgid="216" name="trees_autumn" tilewidth="32" tileheight="32" tilecount="28" columns="7">
-  <image source="../trees/autumn_4.png" width="224" height="128"/>
- </tileset>
+ <tileset firstgid="19" source="../tiles/trees_lpc.tsx">
+ <tileset firstgid="188" source="../tiles/trees_green.tsx">
+ <tileset firstgid="216" source="../tiles/trees_autumn.tsx">
  <layer name="regions" width="64" height="64">
   <data encoding="csv">
 11,11,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
