@@ -54,18 +54,18 @@ class WaveGenerator:
 
         if direction == self.down:
             for x in [xpos-1, xpos, xpos+1]:
-                for y in range(ypos, len + 1):
+                for y in range(ypos, ypos + len):
                     self.kill_tree(x, y)
         if direction == self.up:
             for x in [xpos-1, xpos, xpos+1]:
-                for y in range(ypos-len, len + 1):
+                for y in range(ypos-len, ypos):
                     self.kill_tree(x, y)
         if direction == self.right:
-            for x in range(xpos, len + 1):
+            for x in range(xpos, xpos + len):
                 for y in [ypos - 1, ypos, ypos + 1]:
                     self.kill_tree(x, y)
         if direction == self.left:
-            for x in range(xpos - len, len + 1):
+            for x in range(xpos - len, xpos):
                 for y in [ypos - 1, ypos, ypos + 1]:
                     self.kill_tree(x, y)
 
