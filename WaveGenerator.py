@@ -329,7 +329,7 @@ class WaveGenerator:
                     self.fringe_layer.data[ypos + 1][xpos] = self.bottom
                 elif left_tile is self.top:
                     self.generate_water_tile(xpos, ypos + 1)
-                elif left_tile is self.topl or left_tile is self.top:
+                elif left_tile is self.topl or left_tile is self.l:
                     self.fringe_layer.data[ypos + 1][xpos] = self.outer_topl
                 elif left_tile is self.outer_bottoml or left_tile is self.outer_bottomr:
                     self.generate_water_tile(xpos, ypos + 1)
@@ -342,7 +342,7 @@ class WaveGenerator:
             if (xpos, ypos - 1) in self.fringe_objects:
                 right_tile = self.fringe_layer.data[ypos - 1][xpos]
                 if right_tile is self.bottoml or right_tile is self.l:
-                    self.fringe_layer.data[ypos - 1][xpos] = self.outer_bottomr
+                    self.fringe_layer.data[ypos - 1][xpos] = self.outer_bottoml
                 elif right_tile is self.topr or right_tile is self.topl or right_tile is self.top:
                     self.fringe_layer.data[ypos - 1][xpos] = self.top
                     self.collision_layer.data[ypos - 1][xpos] = self.top
@@ -360,10 +360,46 @@ class WaveGenerator:
                 self.add_to_list((xpos - 1, ypos))
 
         elif direction is self.right:
-            self.fringe_layer.data[ypos + 1][xpos] = self.bottom
-            self.fringe_layer.data[ypos - 1][xpos] = self.top
-            self.collision_layer.data[ypos - 1][xpos] = self.top
-            self.add_to_list((xpos, ypos + 1))
+            # Check if we collide with another fringe object
+            if (xpos, ypos + 1) in self.fringe_objects:
+                # Save bject for easy access
+                right_tile = self.fringe_layer.data[ypos + 1][xpos]
+                if right_tile is self.l or right_tile is self.topl:
+                    self.fringe_layer.data[ypos + 1][xpos] = self.outer_topl
+                elif right_tile is self.bottoml or right_tile is self.bottomr or right_tile is self.bottom:
+                    self.fringe_layer.data[ypos + 1][xpos] = self.bottom
+                elif right_tile is self.top:
+                    self.generate_water_tile(xpos, ypos + 1)
+                elif right_tile is self.topr or right_tile is self.r:
+                    self.fringe_layer.data[ypos + 1][xpos] = self.outer_topr
+                elif right_tile is self.outer_bottoml or right_tile is self.outer_bottomr:
+                    self.generate_water_tile(xpos, ypos + 1)
+                # elif left_tile is self.bottom:
+                #     self.fringe_layer.data[ypos][xpos - 1] = self.outer_topl
+            else:
+                self.fringe_layer.data[ypos + 1][xpos] = self.bottom
+                self.add_to_list((xpos + 1, ypos))
+
+            if (xpos, ypos - 1) in self.fringe_objects:
+                left_tile = self.fringe_layer.data[ypos - 1][xpos]
+                if left_tile is self.bottomr or left_tile is self.r:
+                    self.fringe_layer.data[ypos - 1][xpos] = self.outer_bottomr
+                elif left_tile is self.topr or left_tile is self.topl or left_tile is self.top:
+                    self.fringe_layer.data[ypos - 1][xpos] = self.top
+                    self.collision_layer.data[ypos - 1][xpos] = self.top
+                elif left_tile is self.bottom:
+                    self.generate_water_tile(xpos, ypos - 1)
+                elif left_tile is self.l or left_tile is self.bottoml:
+                    self.fringe_layer.data[ypos - 1][xpos] = self.outer_bottoml
+                elif left_tile is self.outer_topl or left_tile is self.outer_topr:
+                    self.generate_water_tile(xpos, ypos - 1)
+                # elif right_tile is self.bottom:
+                #     self.fringe_layer.data[ypos][xpos + 1] = self.outer_topr
+            else:
+                self.fringe_layer.data[ypos - 1][xpos] = self.top
+                self.collision_layer.data[ypos - 1][xpos] = self.top
+                self.add_to_list((xpos - 1, ypos))
+
 
     def next_iteration(self, direction, xpos, ypos):
         if direction is self.up:
