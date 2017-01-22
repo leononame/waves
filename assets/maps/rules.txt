@@ -1,3 +1,4 @@
 collision0.tmx
 animation0.tmx
-
+gentrees.tmx
+trunks.tmx
