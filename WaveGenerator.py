@@ -53,11 +53,9 @@ class WaveGenerator:
         if not self.neighbours_ok(direction, xpos, ypos):
             self.special_case(direction, xpos, ypos)
         else:
-            # Update fringe list
-            self.remove_from_list((xpos, ypos))
-            # Make tile water
-            self.ground_layer.data[ypos][xpos] = self.w
-            self.collision_layer.data[ypos][xpos] = self.w
+            # Generate a water tile
+            # Also adds collision and removes from fringe list
+            self.generate_water_tile(xpos, ypos)
 
             # Set outer corners
             if direction == self.down:
@@ -76,9 +74,8 @@ class WaveGenerator:
         # Build middle tunnel
         for i in range(1, len):
             xpos, ypos = self.next_iteration(direction, xpos, ypos)
-            # Make tile water
-            self.ground_layer.data[ypos][xpos] = self.w
-            self.collision_layer.data[ypos][xpos] = self.w
+            # Middle tile is always water tile
+            self.generate_water_tile(xpos, ypos)
             # Make borders
             self.generate_borders(direction, xpos, ypos)
 
@@ -167,28 +164,24 @@ class WaveGenerator:
         return None
 
     def special_case_down(self, xpos, ypos):
+        # First row
         if self.fringe_layer.data[ypos][xpos - 1] is self.bottoml:
             self.fringe_layer.data[ypos][xpos - 1] = self.l
         elif self.fringe_layer.data[ypos][xpos - 1] is self.outer_topr:
-            self.ground_layer.data[ypos][xpos - 1] = self.w
-            self.collision_layer.data[ypos][xpos - 1] = self.w
-            self.remove_from_list((xpos - 1, ypos))
+            self.generate_water_tile(xpos - 1, ypos)
         else:
             self.fringe_layer.data[ypos][xpos - 1] = self.outer_topl
 
         if self.fringe_layer.data[ypos][xpos + 1] is self.bottomr:
             self.fringe_layer.data[ypos][xpos + 1] = self.r
         elif self.fringe_layer.data[ypos][xpos + 1] is self.outer_topl:
-            self.ground_layer.data[ypos][xpos + 1] = self.w
-            self.collision_layer.data[ypos][xpos + 1] = self.w
-            self.remove_from_list((xpos + 1, ypos))
+            self.generate_water_tile(xpos + 1, ypos)
         else:
             self.fringe_layer.data[ypos][xpos + 1] = self.outer_topr
 
         # Make tile water
         self.ground_layer.data[ypos][xpos] = self.w
         self.collision_layer.data[ypos][xpos] = self.w
-
 
         return None
 
@@ -204,3 +197,8 @@ class WaveGenerator:
     def remove_from_list(self, el):
         if el in self.fringe_objects:
             self.fringe_objects.remove(el)
+
+    def generate_water_tile(self, xpos, ypos):
+        self.ground_layer.data[ypos][xpos] = self.w
+        self.collision_layer.data[ypos][xpos] = self.w
+        self.remove_from_list((xpos, ypos))
