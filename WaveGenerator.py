@@ -610,3 +610,75 @@ class WaveGenerator:
 
     def is_tree(self, xpos, ypos):
         return self.tiled_map.get_tile_image(xpos, ypos, 6) is not None
+
+    def rand_fillNeighbour(self, xpos, ypos, xpos_old, ypos_old, d):
+        if d is self.up or d is self.down:
+            y = ypos_old
+            x = xpos
+        if d is self.left or d is self.right:
+            x = xpos_old
+            y = ypos
+        # Change gid in fringe and ground layers
+        self.fringe_layer.data[y][x] = self.w
+        self.ground_layer.data[y][x] = self.w
+        # Change collison layer
+        self.collision_layer.data[y][x] = self.w
+        self.kill_tree(x, y)
+
+    def rand_generateWave(self, xpos, ypos, N):
+        # Check pos moves the starting position to water if necessary
+        direction = random.randint(0, 3)
+        xpos, ypos = self.checkPos(xpos, ypos, direction)
+
+        # waves spread in negative direction of water search direction
+        neg_dir = self.negateDirection(direction)
+        for i in range(N):
+            xpos_old, ypos_old = xpos, ypos
+            xpos, ypos = self.rand_spreadWave(xpos, ypos, neg_dir)
+
+            self.generate_water_tile(xpos, ypos)
+            self.kill_tree(xpos, ypos)
+            # Change neighbour tile from original tile too
+            self.rand_fillNeighbour(xpos, ypos, xpos_old, ypos_old, neg_dir)
+
+    # If the starting position of the sinkhole is not in water, search near water and place it there
+    def checkPos(self, xpos, ypos, direction):
+        if self.ground_layer.data[ypos][xpos] is self.ground_layer.data[0][0]:
+            return (xpos, ypos)
+        else:
+            if direction is 0: # move up
+                return self.checkPos(xpos, ypos - 1, direction)
+            if direction is 1: # move down
+                return self.checkPos(xpos, ypos + 1, direction)
+            if direction is 2: # move left
+                return self.checkPos(xpos - 1, ypos, direction)
+            if direction is 3: # mover right
+                return self.checkPos(xpos + 1, ypos, direction)
+
+    def negateDirection(self, d):
+        if d is self.up:
+            return self.down
+        if d is self.down:
+            return self.up
+        if d is self.left:
+            return self.right
+        if d is self.right:
+            return self.left
+
+    # WAVES
+    # Waves can spread in diagonal neighbour tiles
+    # Temp decission: Waves affect 1-2 tiles (neighbour to avoid gaps). No borders and corners.
+    def rand_spreadWave(self, xpos, ypos, d):
+        if d is self.up:
+            dy = -1
+            dx = random.randint(-1, 1)
+        if d is self.down:
+            dy = 1
+            dx = random.randint(-1, 1)
+        if d is self.left:
+            dx = -1
+            dy = random.randint(-1, 1)
+        if d is self.right:
+            dx = 1
+            dy = random.randint(-1, 1)
+        return (xpos + dx, ypos + dy)

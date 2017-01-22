@@ -91,7 +91,8 @@ class Game:
         # waves.generateCanion(10, 440, 75)
         while not done:
             # Generate waves
-            waves.generateCanion(10)
+            # waves.generateCanion(10)
+            waves.rand_generateWave(random.randint(80, 300), random.randint(80, 300), random.randint(3, 10))
             self.clock.tick(self.fps)
             # Fill screen
             self.screen.fill((198, 209, 255))
