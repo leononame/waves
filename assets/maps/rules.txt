@@ -1,4 +1,6 @@
 collision0.tmx
+collision1.tmx
 animation0.tmx
 gentrees.tmx
 trunks.tmx
+watertoground.tmx

@@ -94,8 +94,8 @@ class Game:
         debounced_space = False
         debounced_alt = True
 
-        wave_limit = 5
-        random_limit = 5
+        wave_limit = 3
+        random_limit = 3
         wave_counter = 0
         random_counter = 0
         self.music.startGameMusic()
@@ -104,10 +104,10 @@ class Game:
             random_counter += 1
             if wave_counter is wave_limit:
                 wave_counter = 0
-                waves.generateCanion(random.randint(5, 12))
+                waves.generateCanion(random.randint(5, 20))
             if random_counter is random_limit:
                 random_counter = 0
-                waves.rand_generateWave(random.randint(72, 440), random.randint(70, 438), random.randint(3, 10))
+                waves.rand_generateWave(random.randint(72, 440), random.randint(70, 438), random.randint(3, 20))
             self.clock.tick(self.fps)
             # Fill screen
             self.screen.fill((198, 209, 255))
