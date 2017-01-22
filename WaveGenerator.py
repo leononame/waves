@@ -203,7 +203,6 @@ class WaveGenerator:
                 self.fringe_layer.data[ypos + 1][xpos] = self.bottoml
                 self.add_to_list((xpos, ypos + 1))
 
-
             if (xpos, ypos - 1) in self.fringe_objects:
                 right_tile = self.fringe_layer.data[ypos - 1][xpos]
                 if right_tile is self.topr:
@@ -216,12 +215,12 @@ class WaveGenerator:
                 elif right_tile is self.bottom:
                     self.fringe_layer.data[ypos - 1][xpos] = self.outer_topl
                 # special case
-                # elif left_tile is self.bottoml:
+                # elif left_tile is self.bottomr:
             else:
                 self.fringe_layer.data[ypos - 1][xpos] = self.topl
                 self.add_to_list((xpos, ypos - 1))
 
-            if (xpos, ypos) in self.fringe_objects:
+            if (xpos, ypos) in self.fringe_objects and self.fringe_layer.data[ypos][xpos] is not 0:
                 middle_tile = self.fringe_layer.data[ypos][xpos]
                 if middle_tile is self.bottomr or middle_tile is self.bottom:
                     self.fringe_layer.data[ypos][xpos] = self.outer_topl

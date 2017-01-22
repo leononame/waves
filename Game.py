@@ -88,6 +88,7 @@ class Game:
         done = False
         debounced_space = False
         debounced_alt = True
+        # waves.generateCanion(10, 440, 75)
         while not done:
             # Generate waves
             waves.generateCanion(10)
