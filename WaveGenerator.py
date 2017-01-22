@@ -84,6 +84,7 @@ class WaveGenerator:
     def generate_finish_borders(self, direction, xpos, ypos):
         xpos, ypos = self.next_iteration(direction, xpos, ypos)
         if direction is self.down:
+
             self.fringe_layer.data[ypos][xpos] = self.bottom
             self.fringe_layer.data[ypos][xpos - 1] = self.bottoml
             self.fringe_layer.data[ypos][xpos + 1] = self.bottomr
@@ -117,10 +118,12 @@ class WaveGenerator:
                     self.fringe_layer.data[ypos][xpos - 1] = self.l
                 elif left_tile is self.r:
                     self.generate_water_tile(xpos - 1, ypos)
-                elif left_tile is self.bottomr:
-                    self.fringe_layer.data[ypos][xpos - 1] = self.outer_topr
-                elif left_tile is self.bottom:
+                elif left_tile is self.bottomr or left_tile is self.bottom:
                     self.fringe_layer.data[ypos][xpos - 1] = self.outer_topl
+                elif left_tile is self.outer_topr:
+                    self.generate_water_tile(xpos - 1, ypos)
+                # elif left_tile is self.bottom:
+                #     self.fringe_layer.data[ypos][xpos - 1] = self.outer_topl
             else:
                 self.fringe_layer.data[ypos][xpos - 1] = self.l
                 self.add_to_list((xpos - 1, ypos))
@@ -134,10 +137,12 @@ class WaveGenerator:
                     self.fringe_layer.data[ypos][xpos + 1] = self.r
                 elif right_tile is self.l:
                     self.generate_water_tile(xpos + 1, ypos)
-                elif right_tile is self.bottoml:
-                    self.fringe_layer.data[ypos][xpos + 1] = self.outer_topl
-                elif right_tile is self.bottom:
+                elif right_tile is self.bottoml or right_tile is self.bottom:
                     self.fringe_layer.data[ypos][xpos + 1] = self.outer_topr
+                elif right_tile is self.outer_topl:
+                    self.generate_water_tile(xpos + 1, ypos)
+                # elif right_tile is self.bottom:
+                #     self.fringe_layer.data[ypos][xpos + 1] = self.outer_topr
 
             else:
                 self.fringe_layer.data[ypos][xpos + 1] = self.r
