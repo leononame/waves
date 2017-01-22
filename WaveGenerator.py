@@ -36,7 +36,6 @@ class WaveGenerator:
         # Get position
         if xpos is 0 and ypos is 0:
             xpos, ypos = self.get_starting_position()
-
         tile = self.fringe_layer.data[ypos][xpos]
         if tile is self.top:
             direction = self.up
@@ -47,6 +46,9 @@ class WaveGenerator:
         elif tile is self.r:
             direction = self.right
         else:
+            return None
+
+        if not self.neighbours_ok(direction, xpos, ypos):
             return None
 
         # Update fringe list
@@ -135,3 +137,9 @@ class WaveGenerator:
             print(r)
             x, y = self.fringe_objects[r]
         return x, y
+
+    def neighbours_ok(self, direction, xpos, ypos):
+        if direction is self.up or direction is self.down:
+            return self.fringe_layer.data[ypos][xpos - 1] in [self.top, self.bottom] and self.fringe_layer.data[ypos][xpos + 1] in [self.top, self.bottom]
+        elif direction is self.left or direction is self.right:
+            return self.fringe_layer.data[ypos - 1][xpos] in [self.l, self.r] and self.fringe_layer.data[ypos + 1][xpos] in [self.l, self.r]
