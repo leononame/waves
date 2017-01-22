@@ -7,6 +7,7 @@ import Map
 import Player
 import Sinkhole
 import Utils
+import WaveGenerator
 
 
 class Game:
@@ -81,15 +82,15 @@ class Game:
         player = Player.Player(player_dx, player_dy, camera_x, camera_y)
         # Create map
         current_map = Map.Map(camera_x, camera_y, tiled_map)
-        # Create sinkhole generatpr
-        sinkhole = Sinkhole.Sinkhole(tiled_map)
+        # Create sinkhole generator
+        waves = WaveGenerator.WaveGenerator(tiled_map)
         # Flow control
         done = False
         debounced_space = False
         debounced_alt = True
         while not done:
-            # Generate sinkholes
-            # sinkhole.generateWave(random.randint(70, 300), random.randint(70, 300), random.randint(10, 30))
+            # Generate waves
+            waves.generateCanion(10)
             self.clock.tick(self.fps)
             # Fill screen
             self.screen.fill((198, 209, 255))
