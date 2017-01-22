@@ -181,10 +181,55 @@ class WaveGenerator:
                 self.add_to_list((xpos + 1, ypos))
 
         elif direction is self.right:
-            self.fringe_layer.data[ypos - 1][xpos] = self.topr
-            self.fringe_layer.data[ypos][xpos] = self.r
-            self.fringe_layer.data[ypos + 1][xpos] = self.bottomr
-            self.extend_to_list(((xpos, ypos), (xpos, ypos - 1), (xpos, ypos + 1)))
+
+            if (xpos, ypos + 1) in self.fringe_objects:
+                right_tile = self.fringe_layer.data[ypos + 1][xpos]
+                if right_tile is self.bottomr:
+                    self.fringe_layer.data[ypos + 1][xpos] = self.bottom
+                elif right_tile is self.l:
+                    self.fringe_layer.data[ypos + 1][xpos] = self.outer_topl
+                elif right_tile is self.topr:
+                    self.fringe_layer.data[ypos + 1][xpos] = self.r
+                elif right_tile is self.top:
+                    self.fringe_layer.data[ypos + 1][xpos] = self.outer_bottomr
+                # special case
+                # elif left_tile is self.topl:
+            elif self.ground_layer.data[ypos + 1][xpos] is not self.w:
+                self.fringe_layer.data[ypos + 1][xpos] = self.bottomr
+                self.add_to_list((xpos, ypos + 1))
+
+            if (xpos, ypos - 1) in self.fringe_objects:
+                left_tile = self.fringe_layer.data[ypos - 1][xpos]
+                if left_tile is self.topl:
+                    self.fringe_layer.data[ypos - 1][xpos] = self.top
+                    self.collision_layer.data[ypos - 1][xpos] = self.top
+                elif left_tile is self.l:
+                    self.fringe_layer.data[ypos - 1][xpos] = self.outer_bottoml
+                elif left_tile is self.bottomr:
+                    self.fringe_layer.data[ypos - 1][xpos] = self.r
+                elif left_tile is self.bottom:
+                    self.fringe_layer.data[ypos - 1][xpos] = self.outer_topr
+                # special case
+                # elif left_tile is self.bottoml:
+            elif self.ground_layer.data[ypos - 1][xpos] is not self.w:
+                self.fringe_layer.data[ypos - 1][xpos] = self.topr
+                self.add_to_list((xpos, ypos - 1))
+
+            if (xpos, ypos) in self.fringe_objects and self.fringe_layer.data[ypos][xpos] is not 0:
+                middle_tile = self.fringe_layer.data[ypos][xpos]
+                if middle_tile is self.bottoml or middle_tile is self.bottom:
+                    self.fringe_layer.data[ypos][xpos] = self.outer_topr
+                elif middle_tile is self.l:
+                    self.generate_water_tile(xpos, ypos)
+                elif middle_tile is self.topl or middle_tile is self.top:
+                    self.fringe_layer.data[ypos][xpos] = self.outer_bottomr
+                elif middle_tile is self.topr or middle_tile is self.bottomr:
+                    self.fringe_layer.data[ypos][xpos] = self.r
+            elif self.ground_layer.data[ypos][xpos] is not self.w:
+                self.fringe_layer.data[ypos][xpos] = self.r
+                self.add_to_list((xpos, ypos))
+            # self.fringe_layer.data[ypos][xpos] = self.l
+
         elif direction is self.left:
 
             if (xpos, ypos + 1) in self.fringe_objects:
@@ -254,7 +299,7 @@ class WaveGenerator:
                     self.generate_water_tile(xpos - 1, ypos)
                 # elif left_tile is self.bottom:
                 #     self.fringe_layer.data[ypos][xpos - 1] = self.outer_topl
-            else:
+            elif self.ground_layer.data[ypos][xpos - 1] is not self.w:
                 self.fringe_layer.data[ypos][xpos - 1] = self.l
                 self.add_to_list((xpos - 1, ypos))
 
@@ -274,7 +319,7 @@ class WaveGenerator:
                 # elif right_tile is self.bottom:
                 #     self.fringe_layer.data[ypos][xpos + 1] = self.outer_topr
 
-            else:
+            elif self.ground_layer.data[ypos][xpos + 1] is not self.w:
                 self.fringe_layer.data[ypos][xpos + 1] = self.r
                 self.add_to_list((xpos + 1, ypos))
 
@@ -295,7 +340,7 @@ class WaveGenerator:
                     self.generate_water_tile(xpos - 1, ypos)
                 # elif left_tile is self.bottom:
                 #     self.fringe_layer.data[ypos][xpos - 1] = self.outer_topl
-            else:
+            elif self.ground_layer.data[ypos][xpos -1] is not self.w:
                 self.fringe_layer.data[ypos][xpos - 1] = self.l
                 self.add_to_list((xpos - 1, ypos))
 
@@ -314,7 +359,7 @@ class WaveGenerator:
                     self.generate_water_tile(xpos + 1, ypos)
                 # elif right_tile is self.bottom:
                 #     self.fringe_layer.data[ypos][xpos + 1] = self.outer_topr
-            else:
+            elif self.ground_layer.data[ypos][xpos + 1] is not self.w:
                 self.fringe_layer.data[ypos][xpos + 1] = self.r
                 self.add_to_list((xpos + 1, ypos))
 
@@ -335,7 +380,7 @@ class WaveGenerator:
                     self.generate_water_tile(xpos, ypos + 1)
                 # elif left_tile is self.bottom:
                 #     self.fringe_layer.data[ypos][xpos - 1] = self.outer_topl
-            else:
+            elif self.ground_layer.data[ypos + 1][xpos] is not self.w:
                 self.fringe_layer.data[ypos + 1][xpos] = self.bottom
                 self.add_to_list((xpos + 1, ypos))
 
@@ -354,7 +399,7 @@ class WaveGenerator:
                     self.generate_water_tile(xpos, ypos - 1)
                 # elif right_tile is self.bottom:
                 #     self.fringe_layer.data[ypos][xpos + 1] = self.outer_topr
-            else:
+            elif self.ground_layer.data[ypos - 1][xpos] is not self.w:
                 self.fringe_layer.data[ypos - 1][xpos] = self.top
                 self.collision_layer.data[ypos - 1][xpos] = self.top
                 self.add_to_list((xpos - 1, ypos))
@@ -376,7 +421,7 @@ class WaveGenerator:
                     self.generate_water_tile(xpos, ypos + 1)
                 # elif left_tile is self.bottom:
                 #     self.fringe_layer.data[ypos][xpos - 1] = self.outer_topl
-            else:
+            elif self.ground_layer.data[ypos + 1][xpos] is not self.w:
                 self.fringe_layer.data[ypos + 1][xpos] = self.bottom
                 self.add_to_list((xpos + 1, ypos))
 
@@ -395,7 +440,7 @@ class WaveGenerator:
                     self.generate_water_tile(xpos, ypos - 1)
                 # elif right_tile is self.bottom:
                 #     self.fringe_layer.data[ypos][xpos + 1] = self.outer_topr
-            else:
+            elif self.ground_layer.data[ypos - 1][xpos] is not self.w:
                 self.fringe_layer.data[ypos - 1][xpos] = self.top
                 self.collision_layer.data[ypos - 1][xpos] = self.top
                 self.add_to_list((xpos - 1, ypos))
