@@ -1,5 +1,7 @@
 import random
 
+import Utils
+
 
 class Sinkhole:
     def __init__(self, tiled_map):
@@ -202,9 +204,18 @@ class Sinkhole:
             xpos, ypos = self.spreadWave(xpos, ypos, neg_dir)
 
             self.changeToWater(xpos, ypos)
+            self.kill_tree(xpos, ypos)
             # Change neighbour tile from original tile too
             self.fillNeighbour(xpos, ypos, xpos_old, ypos_old, neg_dir)
 
+    def kill_tree(self, xpos, ypos):
+        if not self.is_tree(xpos, ypos):
+            return None
+        Utils.fell_tree_at(xpos, ypos, self.tiled_map)
+
+    # Returns true if there is a tree at that tile
+    def is_tree(self, xpos, ypos):
+        return self.tiled_map.get_tile_image(xpos, ypos, 6) is not None
 
     def fillNeighbour(self, xpos, ypos, xpos_old, ypos_old, d):
         if d is self.up or d is self.down:
@@ -218,6 +229,7 @@ class Sinkhole:
         self.ground_layer.data[y][x] = self.w
         # Change collison layer
         self.collision_layer.data[y][x] = self.w
+        self.kill_tree(x, y)
     ## Waves
 
 

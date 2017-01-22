@@ -34,6 +34,8 @@ class Player(object):
         self.map_x = x + cx
         self.map_y = y + 1 + cy
 
+        self.carrying_log = False
+
     def is_colliding(self, key, map):
         if key == pygame.K_LEFT:
             self.dir = self.__left
@@ -86,4 +88,156 @@ class Player(object):
         self.walking = False
 
     def is_collision(self, x, y, map):
+        # Layer 2 is collision layer
         return map.get_tile_image(x, y, 2) is not None
+
+    def __is_trunk(self, x, y, tile_map):
+        # Layer 6 is tree trunk layer
+        return tile_map.get_tile_image(x, y, 6) is not None
+
+    # Check if player is dead
+    def is_dead(self, tile_map):
+        # Player is dead if he is on a collision tile (a wave hit him)
+        return tile_map.get_tile_image(self.map_x, self.map_y, 2) is not None
+
+    # Checks if player is looking right at a tree in order to fell it
+    def is_in_front_of_tree(self, map):
+        # Check directions
+        if self.dir == self.__down:
+            # When looking down, we collide when x,y+1 or x+1,y+1
+            return self.__is_trunk(self.map_x, self.map_y + 1, map) or self.__is_trunk(self.map_x + 1, self.map_y + 1, map)
+        elif self.dir == self.__right:
+            return self.__is_trunk(self.map_x + 1, self.map_y, map) or self.__is_trunk(self.map_x + 2, self.map_y, map)
+        elif self.dir == self.__left:
+            return self.__is_trunk(self.map_x - 1, self.map_y, map)
+        elif self.dir == self.__up:
+            return self.__is_trunk(self.map_x, self.map_y - 1, map) or self.__is_trunk(self.map_x + 1, self.map_y - 1, map)
+        return False
+
+    # Checks if player can pick up log
+    def is_standing_on_log(self, tile_map, offset = True):
+        # Layer 7 is log layer
+        if offset:
+            if self.dir == self.__right:
+                 return tile_map.get_tile_image(self.map_x + 2, self.map_y, 7) is not None and tile_map.get_tile_image(self.map_x + 3, self.map_y, 7) is not None
+            elif self.dir == self.__left:
+                return tile_map.get_tile_image(self.map_x - 1, self.map_y, 7) is not None and tile_map.get_tile_image(self.map_x - 2, self.map_y, 7) is not None
+            elif self.dir == self.__down:
+                return tile_map.get_tile_image(self.map_x, self.map_y + 1, 7) is not None and tile_map.get_tile_image(self.map_x + 1, self.map_y + 1, 7) is not None
+            elif self.dir == self.__up:
+                return tile_map.get_tile_image(self.map_x, self.map_y - 1, 7) is not None and tile_map.get_tile_image(self.map_x + 1, self.map_y - 1, 7) is not None
+        else:
+         return tile_map.get_tile_image(self.map_x, self.map_y, 7) is not None and tile_map.get_tile_image(self.map_x + 1, self.map_y, 7) is not None
+
+    def pick_up_log(self, tile_map, offset = True):
+        # If offset is True, we pick up the log in front of us
+        # Otherwise, we pick up the log we're standing on
+        self.carrying_log = True
+        if offset:
+            # Remove log from log layer
+            if self.dir == self.__right:
+                Utils.remove_log(self.map_x + 2, self.map_y, tile_map)
+                Utils.remove_log(self.map_x + 3, self.map_y, tile_map)
+            elif self.dir == self.__left:
+                Utils.remove_log(self.map_x - 1, self.map_y, tile_map)
+                Utils.remove_log(self.map_x - 2, self.map_y, tile_map)
+            elif self.dir == self.__down:
+                Utils.remove_log(self.map_x, self.map_y + 1, tile_map)
+                Utils.remove_log(self.map_x + 1, self.map_y + 1, tile_map)
+            elif self.dir == self.__up:
+                Utils.remove_log(self.map_x, self.map_y - 1, tile_map)
+                Utils.remove_log(self.map_x + 1, self.map_y - 1, tile_map)
+        else:
+            # Remove log from log layer
+            Utils.remove_log(self.map_x, self.map_y, tile_map)
+            Utils.remove_log(self.map_x + 1, self.map_y, tile_map)
+
+    def can_throw_log(self, tile_map, offset = True):
+        retval = True
+        if offset:
+            if self.dir == self.__right:
+                # Log layer must be empty
+                retval = retval and tile_map.get_tile_image(self.map_x + 2, self.map_y, 7) is None
+                retval = retval and tile_map.get_tile_image(self.map_x + 3, self.map_y, 7) is None
+                # Trunk layer must be empty
+                retval = retval and tile_map.get_tile_image(self.map_x + 2, self.map_y, 6) is None
+                retval = retval and tile_map.get_tile_image(self.map_x + 3, self.map_y, 6) is None
+            elif self.dir == self.__left:
+                # Log layer must be empty
+                retval = retval and tile_map.get_tile_image(self.map_x - 1, self.map_y, 7) is None
+                retval = retval and tile_map.get_tile_image(self.map_x - 2, self.map_y, 7) is None
+                # Trunk layer must be empty
+                retval = retval and tile_map.get_tile_image(self.map_x - 1, self.map_y, 6) is None
+                retval = retval and tile_map.get_tile_image(self.map_x - 2, self.map_y, 6) is None
+            elif self.dir == self.__down:
+                # Log layer must be empty
+                retval = retval and tile_map.get_tile_image(self.map_x, self.map_y + 1, 7) is None
+                retval = retval and tile_map.get_tile_image(self.map_x + 1, self.map_y + 1, 7) is None
+                # Trunk layer must be empty
+                retval = retval and tile_map.get_tile_image(self.map_x, self.map_y + 1, 6) is None
+                retval = retval and tile_map.get_tile_image(self.map_x + 1, self.map_y + 1, 6) is None
+            elif self.dir == self.__up:
+                # Log layer must be empty
+                retval = retval and tile_map.get_tile_image(self.map_x, self.map_y - 1, 7) is None
+                retval = retval and tile_map.get_tile_image(self.map_x + 1, self.map_y - 1, 7) is None
+                # Trunk layer must be empty
+                retval = retval and tile_map.get_tile_image(self.map_x, self.map_y - 1, 6) is None
+                retval = retval and tile_map.get_tile_image(self.map_x + 1, self.map_y - 1, 6) is None
+        else:
+            # Log layer must be empty
+            retval = retval and tile_map.get_tile_image(self.map_x, self.map_y, 7) is None
+            retval = retval and tile_map.get_tile_image(self.map_x + 1, self.map_y, 7) is None
+
+        return retval
+
+    def throw_log(self, tile_map, offset=True):
+        self.carrying_log = False
+        if offset:
+            if self.dir == self.__right:
+                Utils.add_log(self.map_x + 2, self.map_y, tile_map)
+                Utils.add_log(self.map_x + 3, self.map_y, tile_map)
+            elif self.dir == self.__left:
+                Utils.add_log(self.map_x - 1, self.map_y, tile_map)
+                Utils.add_log(self.map_x - 2, self.map_y, tile_map)
+            elif self.dir == self.__down:
+                Utils.add_log(self.map_x, self.map_y + 1, tile_map)
+                Utils.add_log(self.map_x + 1, self.map_y + 1, tile_map)
+            elif self.dir == self.__up:
+                Utils.add_log(self.map_x, self.map_y - 1, tile_map)
+                Utils.add_log(self.map_x + 1, self.map_y - 1, tile_map)
+        else:
+            Utils.add_log(self.map_x, self.map_y, tile_map)
+            Utils.add_log(self.map_x + 1, self.map_y, tile_map)
+
+    def fell_tree(self, tile_map):
+        # Check directions
+        if self.dir == self.__down:
+            # When looking down, we collide when x,y+1 or x+1,y+1
+            if self.__is_trunk(self.map_x, self.map_y + 1, tile_map):
+                x = self.map_x
+                y = self.map_y + 1
+            elif self.__is_trunk(self.map_x + 1, self.map_y + 1, tile_map):
+                x = self.map_x + 1
+                y = self.map_y +1
+        elif self.dir == self.__right:
+            if self.__is_trunk(self.map_x + 1, self.map_y, tile_map):
+                x = self.map_x + 1
+                y = self.map_y
+            elif self.__is_trunk(self.map_x + 2, self.map_y, tile_map):
+                x = self.map_x + 2
+                y = self.map_y
+        elif self.dir == self.__left:
+            if self.__is_trunk(self.map_x - 1, self.map_y, tile_map):
+                x = self.map_x - 1
+                y = self.map_y
+        elif self.dir == self.__up:
+            if self.__is_trunk(self.map_x, self.map_y - 1, tile_map):
+                x = self.map_x
+                y = self.map_y - 1
+            elif self.__is_trunk(self.map_x + 1, self.map_y - 1, tile_map):
+                x = self.map_x + 1
+                y = self.map_y - 1
+        if x is not None and y is not None:
+            Utils.fell_tree_at(x, y, tile_map)
+            Utils.generate_logs(x, y, tile_map)
+
