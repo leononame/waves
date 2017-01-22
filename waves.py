@@ -39,8 +39,8 @@ def main():
     fps = 30
 
     waveGenerator = WaveGenerator.WaveGenerator(tiled_map)
-    waveGenerator.generateCanion(10, 73, 70)
-    waveGenerator.generateCanion(10, 80, 80)
+    # waveGenerator.generateCanion(10, 73, 70)
+    # waveGenerator.generateCanion(10, 80, 80)
     # sinkhole.generateSinkhole(10, 10, 5, 10)
     # sinkhole.generateSinkhole(80, 82, 10, 5)
 
@@ -49,7 +49,7 @@ def main():
 
     # Start loop
     while not done:
-        # waveGenerator.generateCanion(20)
+        waveGenerator.generateCanion(20)
         # Spawn random water sinkholes
         count += 1
         if count is fps / 4:
