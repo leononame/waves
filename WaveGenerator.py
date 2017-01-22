@@ -150,10 +150,52 @@ class WaveGenerator:
                 self.fringe_layer.data[ypos][xpos + 1] = self.bottomr
                 self.add_to_list((xpos + 1, ypos))
         elif direction is self.up:
-            self.fringe_layer.data[ypos][xpos] = self.top
-            self.fringe_layer.data[ypos][xpos - 1] = self.topl
-            self.fringe_layer.data[ypos][xpos + 1] = self.topr
-            self.extend_to_list(((xpos, ypos), (xpos - 1, ypos), (xpos + 1, ypos)))
+            if (xpos - 1, ypos) in self.fringe_objects:
+                left_tile = self.fringe_layer.data[ypos][xpos - 1]
+                if left_tile is self.bottoml:
+                    self.fringe_layer.data[ypos][xpos - 1] = self.l
+                elif left_tile is self.bottom:
+                    self.fringe_layer.data[ypos][xpos - 1] = self.outer_topl
+                elif left_tile is self.topr:
+                    self.fringe_layer.data[ypos][xpos - 1] = self.top
+                elif left_tile is self.r:
+                    self.fringe_layer.data[ypos][xpos - 1] = self.bottomr
+                # special case
+                # elif left_tile is self.bottomr:
+            else:
+                self.fringe_layer.data[ypos][xpos - 1] = self.topl
+                self.add_to_list((xpos - 1, ypos))
+
+            if (xpos, ypos) in self.fringe_objects:
+                middle_tile = self.fringe_layer.data[ypos][xpos]
+                if middle_tile is self.bottoml or middle_tile is self.l:
+                    self.fringe_layer.data[ypos][xpos] = self.outer_bottoml
+                elif middle_tile is self.bottom:
+                    self.generate_water_tile(xpos, ypos)
+                elif middle_tile is self.bottomr or middle_tile is self.r:
+                    self.fringe_layer.data[ypos][xpos] = self.outer_bottomr
+                elif middle_tile is self.topr or middle_tile is self.topl:
+                    self.fringe_layer.data[ypos][xpos] = self.top
+            else:
+                self.fringe_layer.data[ypos][xpos] = self.top
+                self.add_to_list((xpos, ypos))
+
+            if (xpos + 1, ypos) in self.fringe_objects:
+                right_tile = self.fringe_layer.data[ypos][xpos + 1]
+                if right_tile is self.bottomr:
+                    self.fringe_layer.data[ypos][xpos + 1] = self.r
+                elif right_tile is self.bottom:
+                    self.fringe_layer.data[ypos][xpos + 1] = self.outer_topr
+                elif right_tile is self.topl:
+                    self.fringe_layer.data[ypos][xpos + 1] = self.top
+                elif right_tile is self.l:
+                    self.fringe_layer.data[ypos][xpos + 1] = self.outer_bottoml
+                # special case
+                # elif left_tile is self.bottoml:
+            else:
+                self.fringe_layer.data[ypos][xpos + 1] = self.topr
+                self.add_to_list((xpos + 1, ypos))
+
         elif direction is self.right:
             self.fringe_layer.data[ypos - 1][xpos] = self.topr
             self.fringe_layer.data[ypos][xpos] = self.r
