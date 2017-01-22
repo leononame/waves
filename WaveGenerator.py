@@ -1,5 +1,7 @@
 import random
 
+import Utils
+
 
 class WaveGenerator:
     def __init__(self, tiled_map):
@@ -49,6 +51,23 @@ class WaveGenerator:
             direction = self.right
         else:
             return None
+
+        if direction == self.down:
+            for x in [xpos-1, xpos, xpos+1]:
+                for y in range(ypos, len + 1):
+                    self.kill_tree(x, y)
+        if direction == self.up:
+            for x in [xpos-1, xpos, xpos+1]:
+                for y in range(ypos-len, len + 1):
+                    self.kill_tree(x, y)
+        if direction == self.right:
+            for x in range(xpos, len + 1):
+                for y in [ypos - 1, ypos, ypos + 1]:
+                    self.kill_tree(x, y)
+        if direction == self.left:
+            for x in range(xpos - len, len + 1):
+                for y in [ypos - 1, ypos, ypos + 1]:
+                    self.kill_tree(x, y)
 
         if not self.neighbours_ok(direction, xpos, ypos):
             self.special_case(direction, xpos, ypos)
@@ -530,3 +549,11 @@ class WaveGenerator:
         self.ground_layer.data[ypos][xpos] = self.w
         self.collision_layer.data[ypos][xpos] = self.w
         self.remove_from_list((xpos, ypos))
+
+    def kill_tree(self, xpos, ypos):
+        if not self.is_tree(xpos, ypos):
+            return None
+        Utils.fell_tree_at(xpos, ypos, self.tiled_map)
+
+    def is_tree(self, xpos, ypos):
+        return self.tiled_map.get_tile_image(xpos, ypos, 6) is not None
