@@ -8,6 +8,8 @@ class WaveGenerator:
         # Layers
         self.tiled_map = tiled_map
         self.ground_layer = self.tiled_map.layers[0]
+        # Initialize empty 500x500 list
+        self.collision_temp = [ [ None for y in range( 500 ) ] for x in range( 500 ) ]
         self.fringe_layer = self.tiled_map.layers[1]
         self.collision_layer = self.tiled_map.layers[2]
         self.asset_layer = self.tiled_map.layers[3]
@@ -159,7 +161,8 @@ class WaveGenerator:
                     self.fringe_layer.data[ypos][xpos - 1] = self.outer_topl
                 elif left_tile is self.topr:
                     self.fringe_layer.data[ypos][xpos - 1] = self.top
-                    self.collision_layer.data[ypos][xpos - 1] = self.top
+                    # self.collision_layer.data[ypos][xpos - 1] = self.top
+                    self.collision_temp[xpos - 1][ypos] = self.top
                 elif left_tile is self.r:
                     self.fringe_layer.data[ypos][xpos - 1] = self.outer_bottomr
                 # special case
@@ -180,7 +183,8 @@ class WaveGenerator:
                     self.fringe_layer.data[ypos][xpos] = self.top
             else:
                 self.fringe_layer.data[ypos][xpos] = self.top
-                self.collision_layer.data[ypos][xpos] = self.top
+                # self.collision_layer.data[ypos][xpos] = self.top
+                self.collision_temp[xpos][ypos] = self.top
                 self.add_to_list((xpos, ypos))
 
             if (xpos + 1, ypos) in self.fringe_objects:
@@ -191,7 +195,8 @@ class WaveGenerator:
                     self.fringe_layer.data[ypos][xpos + 1] = self.outer_topr
                 elif right_tile is self.topl:
                     self.fringe_layer.data[ypos][xpos + 1] = self.top
-                    self.collision_layer.data[ypos][xpos + 1] = self.top
+                    # self.collision_layer.data[ypos][xpos + 1] = self.top
+                    self.collision_temp[xpos + 1][ypos] = self.top
                 elif right_tile is self.l:
                     self.fringe_layer.data[ypos][xpos + 1] = self.outer_bottoml
                 # special case
@@ -222,7 +227,8 @@ class WaveGenerator:
                 left_tile = self.fringe_layer.data[ypos - 1][xpos]
                 if left_tile is self.topl:
                     self.fringe_layer.data[ypos - 1][xpos] = self.top
-                    self.collision_layer.data[ypos - 1][xpos] = self.top
+                    # self.collision_layer.data[ypos - 1][xpos] = self.top
+                    self.collision_temp[xpos][ypos - 1] = self.top
                 elif left_tile is self.l:
                     self.fringe_layer.data[ypos - 1][xpos] = self.outer_bottoml
                 elif left_tile is self.bottomr:
@@ -272,7 +278,8 @@ class WaveGenerator:
                 right_tile = self.fringe_layer.data[ypos - 1][xpos]
                 if right_tile is self.topr:
                     self.fringe_layer.data[ypos - 1][xpos] = self.top
-                    self.collision_layer.data[ypos - 1][xpos] = self.top
+                    # self.collision_layer.data[ypos - 1][xpos] = self.top
+                    self.collision_temp[xpos][ypos - 1] = self.top
                 elif right_tile is self.r:
                     self.fringe_layer.data[ypos - 1][xpos] = self.outer_bottomr
                 elif right_tile is self.bottoml:
@@ -410,7 +417,8 @@ class WaveGenerator:
                     self.fringe_layer.data[ypos - 1][xpos] = self.outer_bottoml
                 elif right_tile is self.topr or right_tile is self.topl or right_tile is self.top:
                     self.fringe_layer.data[ypos - 1][xpos] = self.top
-                    self.collision_layer.data[ypos - 1][xpos] = self.top
+                    # self.collision_layer.data[ypos - 1][xpos] = self.top
+                    self.collision_temp[xpos][ypos - 1] = self.top
                 elif right_tile is self.bottom:
                     self.generate_water_tile(xpos, ypos - 1)
                 elif right_tile is self.r or right_tile is self.bottomr:
@@ -421,7 +429,8 @@ class WaveGenerator:
                 #     self.fringe_layer.data[ypos][xpos + 1] = self.outer_topr
             elif self.ground_layer.data[ypos - 1][xpos] is not self.w:
                 self.fringe_layer.data[ypos - 1][xpos] = self.top
-                self.collision_layer.data[ypos - 1][xpos] = self.top
+                # self.collision_layer.data[ypos - 1][xpos] = self.top
+                self.collision_temp[xpos][ypos - 1] = self.top
                 self.add_to_list((xpos - 1, ypos))
 
         elif direction is self.right:
@@ -451,7 +460,8 @@ class WaveGenerator:
                     self.fringe_layer.data[ypos - 1][xpos] = self.outer_bottomr
                 elif left_tile is self.topr or left_tile is self.topl or left_tile is self.top:
                     self.fringe_layer.data[ypos - 1][xpos] = self.top
-                    self.collision_layer.data[ypos - 1][xpos] = self.top
+                    # self.collision_layer.data[ypos - 1][xpos] = self.top
+                    self.collision_temp[xpos][ypos - 1] = self.top
                 elif left_tile is self.bottom:
                     self.generate_water_tile(xpos, ypos - 1)
                 elif left_tile is self.l or left_tile is self.bottoml:
@@ -462,7 +472,8 @@ class WaveGenerator:
                 #     self.fringe_layer.data[ypos][xpos + 1] = self.outer_topr
             elif self.ground_layer.data[ypos - 1][xpos] is not self.w:
                 self.fringe_layer.data[ypos - 1][xpos] = self.top
-                self.collision_layer.data[ypos - 1][xpos] = self.top
+                # self.collision_layer.data[ypos - 1][xpos] = self.top
+                self.collision_temp[xpos][ypos - 1] = self.top
                 self.add_to_list((xpos - 1, ypos))
 
 
@@ -506,7 +517,8 @@ class WaveGenerator:
         # First row
         if self.fringe_layer.data[ypos -1][xpos] is self.topl:
             self.fringe_layer.data[ypos - 1][xpos ] = self.top
-            self.collision_layer.data[ypos - 1][xpos ] = self.top
+            # self.collision_layer.data[ypos - 1][xpos ] = self.top
+            self.collision_temp[xpos][ypos - 1] = self.top
         elif self.fringe_layer.data[ypos - 1][xpos] is self.outer_topl:
             self.generate_water_tile(xpos, ypos - 1)
         else:
@@ -522,12 +534,14 @@ class WaveGenerator:
         # Make tile water
         self.ground_layer.data[ypos][xpos] = self.w
         self.collision_layer.data[ypos][xpos] = self.w
+        self.collision_temp[xpos][ypos] = self.top
 
     def special_case_right(self, xpos, ypos):
         # First row
         if self.fringe_layer.data[ypos -1][xpos] is self.topr:
             self.fringe_layer.data[ypos - 1][xpos ] = self.top
-            self.collision_layer.data[ypos - 1][xpos ] = self.top
+            # self.collision_layer.data[ypos - 1][xpos ] = self.top
+            self.collision_temp[xpos][ypos - 1] = self.top
         elif self.fringe_layer.data[ypos - 1][xpos] is self.outer_topr:
             self.generate_water_tile(xpos, ypos - 1)
         else:
@@ -542,7 +556,8 @@ class WaveGenerator:
 
         # Make tile water
         self.ground_layer.data[ypos][xpos] = self.w
-        self.collision_layer.data[ypos][xpos] = self.w
+        # self.collision_layer.data[ypos][xpos] = self.w
+        self.collision_temp[xpos][ypos] = self.top
 
     def special_case_up(self, xpos, ypos):
         # First row
@@ -562,7 +577,8 @@ class WaveGenerator:
 
         # Make tile water
         self.ground_layer.data[ypos][xpos] = self.w
-        self.collision_layer.data[ypos][xpos] = self.w
+        # self.collision_layer.data[ypos][xpos] = self.w
+        self.collision_temp[xpos][ypos] = self.top
 
     def special_case_down(self, xpos, ypos):
         # First row
@@ -582,7 +598,8 @@ class WaveGenerator:
 
         # Make tile water
         self.ground_layer.data[ypos][xpos] = self.w
-        self.collision_layer.data[ypos][xpos] = self.w
+        # self.collision_layer.data[ypos][xpos] = self.w
+        self.collision_temp[xpos][ypos] = self.top
 
         return None
 
@@ -601,7 +618,8 @@ class WaveGenerator:
 
     def generate_water_tile(self, xpos, ypos):
         self.ground_layer.data[ypos][xpos] = self.w
-        self.collision_layer.data[ypos][xpos] = self.w
+        # self.collision_layer.data[ypos][xpos] = self.w
+        self.collision_temp[xpos][ypos] = self.w
         self.remove_from_list((xpos, ypos))
 
     def kill_tree(self, xpos, ypos):
@@ -637,7 +655,11 @@ class WaveGenerator:
             xpos_old, ypos_old = xpos, ypos
             xpos, ypos = self.rand_spreadWave(xpos, ypos, neg_dir)
 
-            self.generate_water_tile(xpos, ypos)
+            ####self.generate_water_tile(xpos, ypos)
+            self.ground_layer.data[ypos][xpos] = self.w
+            self.collision_layer.data[ypos][xpos] = self.w
+            self.remove_from_list((xpos, ypos))
+
             self.kill_tree(xpos, ypos)
             # Change neighbour tile from original tile too
             self.rand_fillNeighbour(xpos, ypos, xpos_old, ypos_old, neg_dir)
@@ -684,7 +706,7 @@ class WaveGenerator:
             dy = random.randint(-1, 1)
         return (xpos + dx, ypos + dy)
 
-    def render_animations(self):
+    def render_animations(self, screen):
         for anim_object in self.animation_objects:
             xpos = anim_object[0]
             ypos = anim_object[1]
@@ -694,19 +716,19 @@ class WaveGenerator:
             if direction == self.down:
                 for x in [xpos - 1, xpos, xpos + 1]:
                     for y in range(ypos, ypos + len + 1):
-                        self.animate_water(x, y, 0)
+                        self.animate_water(x, y, screen)
             if direction == self.up:
                 for x in [xpos - 1, xpos, xpos + 1]:
                     for y in range(ypos - len, ypos + 1):
-                        self.animate_water(x, y, 0)
+                        self.animate_water(x, y, screen)
             if direction == self.right:
                 for x in range(xpos, xpos + len + 1):
                     for y in [ypos - 1, ypos, ypos + 1]:
-                        self.animate_water(x, y, 0)
+                        self.animate_water(x, y, screen)
             if direction == self.left:
                 for x in range(xpos - len, xpos + 1):
                     for y in [ypos - 1, ypos, ypos + 1]:
-                        self.animate_water(x, y, 0)
+                        self.animate_water(x, y, screen)
 
             anim_object[3] = duration - 1
             if duration is 0:
@@ -714,21 +736,32 @@ class WaveGenerator:
                 if direction == self.down:
                     for x in [xpos - 1, xpos, xpos + 1]:
                         for y in range(ypos, ypos + len + 1):
+                            if self.collision_temp[x][y] is not None:
+                                self.collision_layer.data[y][x] = self.collision_temp[x][y]
                             Utils.remove_tile(x, y, self.tiled_map, 4)
                 if direction == self.up:
                     for x in [xpos - 1, xpos, xpos + 1]:
                         for y in range(ypos - len, ypos + 1):
+                            if self.collision_temp[x][y] is not None:
+                                self.collision_layer.data[y][x] = self.collision_temp[x][y]
                             Utils.remove_tile(x, y, self.tiled_map, 4)
                 if direction == self.right:
                     for x in range(xpos, xpos + len + 1):
                         for y in [ypos - 1, ypos, ypos + 1]:
+                            if self.collision_temp[x][y] is not None:
+                                self.collision_layer.data[y][x] = self.collision_temp[x][y]
                             Utils.remove_tile(x, y, self.tiled_map, 4)
                 if direction == self.left:
                     for x in range(xpos - len, xpos + 1):
                         for y in [ypos - 1, ypos, ypos + 1]:
+                            if self.collision_temp[x][y] is not None:
+                                self.collision_layer.data[y][x] = self.collision_temp[x][y]
                             Utils.remove_tile(x, y, self.tiled_map, 4)
         return None
 
-    def animate_water(self, x, y, layer):
+    def animate_water(self, x, y, screen):
         gids = [1, 55, 56, 57]
         self.tiled_map.layers[4].data[y][x] = gids[random.randint(0, 3)]
+        image = self.tiled_map.get_tile_image(x, y, 4)
+        if image is not None:
+            screen.blit(image, (x * 32, y * 32))
