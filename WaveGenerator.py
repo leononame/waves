@@ -49,30 +49,30 @@ class WaveGenerator:
             return None
 
         if not self.neighbours_ok(direction, xpos, ypos):
-            return None
+            self.special_case(direction, xpos, ypos)
+        else:
+            # Update fringe list
+            self.fringe_objects.remove((xpos, ypos))
+            # Make tile water
+            self.ground_layer.data[ypos][xpos] = self.w
+            self.collision_layer.data[ypos][xpos] = self.w
 
-        # Update fringe list
-        self.fringe_objects.remove((xpos, ypos))
-        # Make tile water
-        self.ground_layer.data[ypos][xpos] = self.w
-        self.collision_layer.data[ypos][xpos] = self.w
-
-        # Set outer corners
-        if direction == self.down:
-            self.fringe_layer.data[ypos][xpos - 1] = self.outer_topl
-            self.fringe_layer.data[ypos][xpos + 1] = self.outer_topr
-        if direction == self.up:
-            self.fringe_layer.data[ypos][xpos - 1] = self.outer_bottoml
-            self.fringe_layer.data[ypos][xpos + 1] = self.outer_bottomr
-        if direction == self.right:
-            self.fringe_layer.data[ypos - 1][xpos] = self.outer_bottomr
-            self.fringe_layer.data[ypos + 1][xpos] = self.outer_topr
-        if direction == self.left:
-            self.fringe_layer.data[ypos - 1][xpos] = self.outer_bottoml
-            self.fringe_layer.data[ypos + 1][xpos] = self.outer_topl
+            # Set outer corners
+            if direction == self.down:
+                self.fringe_layer.data[ypos][xpos - 1] = self.outer_topl
+                self.fringe_layer.data[ypos][xpos + 1] = self.outer_topr
+            if direction == self.up:
+                self.fringe_layer.data[ypos][xpos - 1] = self.outer_bottoml
+                self.fringe_layer.data[ypos][xpos + 1] = self.outer_bottomr
+            if direction == self.right:
+                self.fringe_layer.data[ypos - 1][xpos] = self.outer_bottomr
+                self.fringe_layer.data[ypos + 1][xpos] = self.outer_topr
+            if direction == self.left:
+                self.fringe_layer.data[ypos - 1][xpos] = self.outer_bottoml
+                self.fringe_layer.data[ypos + 1][xpos] = self.outer_topl
 
         # Build middle tunnel
-        for i in range(1, len - 2):
+        for i in range(1, len):
             xpos, ypos = self.next_iteration(direction, xpos, ypos)
             # Make tile water
             self.ground_layer.data[ypos][xpos] = self.w
@@ -143,3 +143,45 @@ class WaveGenerator:
             return self.fringe_layer.data[ypos][xpos - 1] in [self.top, self.bottom] and self.fringe_layer.data[ypos][xpos + 1] in [self.top, self.bottom]
         elif direction is self.left or direction is self.right:
             return self.fringe_layer.data[ypos - 1][xpos] in [self.l, self.r] and self.fringe_layer.data[ypos + 1][xpos] in [self.l, self.r]
+
+    def special_case(self, direction, xpos, ypos):
+        if direction is self.left:
+            self.special_case_left(xpos, ypos)
+        elif direction is self.right:
+            self.special_case_right(xpos, ypos)
+        elif direction is self.up:
+            self.special_case_up(xpos, ypos)
+        elif direction is self.down:
+            self.special_case_down(xpos, ypos)
+
+    def special_case_left(self, xpos, ypos):
+        return None
+
+    def special_case_right(self, xpos, ypos):
+        return None
+
+    def special_case_up(self, xpos, ypos):
+        return None
+
+    def special_case_down(self, xpos, ypos):
+        if self.fringe_layer.data[ypos][xpos - 1] is self.bottoml:
+            self.fringe_layer.data[ypos][xpos - 1] = self.l
+        elif self.fringe_layer.data[ypos][xpos - 1] is self.outer_topr:
+            self.ground_layer.data[ypos][xpos - 1] = self.w
+            self.fringe_objects.remove((xpos - 1, ypos))
+        else:
+            self.fringe_layer.data[ypos][xpos - 1] = self.outer_topl
+
+        if self.fringe_layer.data[ypos][xpos + 1] is self.bottomr:
+            self.fringe_layer.data[ypos][xpos + 1] = self.r
+        elif self.fringe_layer.data[ypos][xpos + 1] is self.outer_topl:
+            self.ground_layer.data[ypos][xpos + 1] = self.w
+            self.fringe_objects.remove((xpos + 1, ypos))
+        else:
+            self.fringe_layer.data[ypos][xpos + 1] = self.outer_topr
+        # Make tile water
+        self.ground_layer.data[ypos][xpos] = self.w
+        self.collision_layer.data[ypos][xpos] = self.w
+
+
+        return None
