@@ -39,7 +39,7 @@ def main():
     fps = 30
 
     waveGenerator = WaveGenerator.WaveGenerator(tiled_map)
-    waveGenerator.generateCanion(10)
+    waveGenerator.generateCanion(10, 80, 70)
     # sinkhole.generateSinkhole(10, 10, 5, 10)
     # sinkhole.generateSinkhole(80, 82, 10, 5)
 

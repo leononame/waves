@@ -33,24 +33,41 @@ class WaveGenerator:
                     self.fringe_objects.append((x, y))
 
     def generateCanion(self, len, xpos=0, ypos=0):
+        # Get position
         if xpos is 0 and ypos is 0:
             xpos, ypos = self.get_starting_position()
-        print(xpos)
-        print(ypos)
-        return None
-        # (xpos, ypos) = self.get_starting_position()
-        # Check pos moves the starting position to water if necessary
-        # direction = random.randint(0, 3)
-        # direction = self.up
-        # xpos, ypos = self.checkPos(xpos, ypos, direction)
-        # print("At pos: (" + str(xpos) + ', ' + str(ypos) + ')')
-        # neg_dir = self.negateDirection(direction)
-        #
-        # print("Entering loop")
-        # # Todo
+
+        tile = self.fringe_layer.data[ypos][xpos]
+        if tile is self.top:
+            direction = self.up
+        elif tile is self.bottom:
+            direction = self.down
+        elif tile is self.l:
+            direction = self.left
+        elif tile is self.r:
+            direction = self.right
+        else:
+            return None
+
+        # Update fringe list
+        self.fringe_objects.remove((xpos, ypos))
+
+        # Set outer corners
+        if direction == self.down:
+            self.fringe_layer.data[ypos][xpos - 1] = self.outer_topl
+            self.fringe_layer.data[ypos][xpos + 1] = self.outer_topr
+        if direction == self.up:
+            self.fringe_layer.data[ypos][xpos - 1] = self.outer_bottoml
+            self.fringe_layer.data[ypos][xpos + 1] = self.outer_bottomr
+        if direction == self.right:
+            self.fringe_layer.data[ypos - 1][xpos] = self.outer_bottomr
+            self.fringe_layer.data[ypos + 1][xpos] = self.outer_topr
+        if direction == self.left:
+            self.fringe_layer.data[ypos - 1][xpos] = self.outer_bottoml
+            self.fringe_layer.data[ypos + 1][xpos] = self.outer_topl
+
+
         # # self.setCorners_Begin(xpos, ypos, neg_dir)
-        # while self.getType(xpos, ypos) is self.w:
-        #     xpos, ypos = self.spreadCanion(xpos, ypos, neg_dir)
         #
         # for i in range(len):
         #     print("Changing tile: (" + str(xpos) + ', ' + str(ypos) + ')')
@@ -84,5 +101,6 @@ class WaveGenerator:
         y = 0
         while self.fringe_layer.data[y][x] not in [self.top, self.bottom, self.l, self.r]:
             r = random.randint(0, length - 1)
+            print(r)
             x, y = self.fringe_objects[r]
         return x, y
