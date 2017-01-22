@@ -222,7 +222,7 @@ class WaveGenerator:
                     self.generate_water_tile(xpos - 1, ypos)
                 elif left_tile is self.bottomr or left_tile is self.bottom:
                     self.fringe_layer.data[ypos][xpos - 1] = self.outer_topl
-                elif left_tile is self.outer_topr:
+                elif left_tile is self.outer_topr or left_tile is self.outer_bottomr:
                     self.generate_water_tile(xpos - 1, ypos)
                 # elif left_tile is self.bottom:
                 #     self.fringe_layer.data[ypos][xpos - 1] = self.outer_topl
@@ -241,7 +241,7 @@ class WaveGenerator:
                     self.generate_water_tile(xpos + 1, ypos)
                 elif right_tile is self.bottoml or right_tile is self.bottom:
                     self.fringe_layer.data[ypos][xpos + 1] = self.outer_topr
-                elif right_tile is self.outer_topl:
+                elif right_tile is self.outer_topl or right_tile is self.outer_bottoml:
                     self.generate_water_tile(xpos + 1, ypos)
                 # elif right_tile is self.bottom:
                 #     self.fringe_layer.data[ypos][xpos + 1] = self.outer_topr
@@ -251,10 +251,45 @@ class WaveGenerator:
                 self.add_to_list((xpos + 1, ypos))
 
         elif direction is self.up:
-            self.fringe_layer.data[ypos][xpos - 1] = self.l
-            self.add_to_list((xpos - 1, ypos))
-            self.fringe_layer.data[ypos][xpos + 1] = self.r
-            self.add_to_list((xpos + 1, ypos))
+            # Check if we collide with another fringe object
+            if (xpos - 1, ypos) in self.fringe_objects:
+                # Save bject for easy access
+                left_tile = self.fringe_layer.data[ypos][xpos - 1]
+                if left_tile is self.bottomr or left_tile is self.bottom:
+                    self.fringe_layer.data[ypos][xpos - 1] = self.outer_topl
+                elif left_tile is self.bottoml or left_tile is self.topl or left_tile is self.l:
+                    self.fringe_layer.data[ypos][xpos - 1] = self.l
+                elif left_tile is self.r:
+                    self.generate_water_tile(xpos - 1, ypos)
+                elif left_tile is self.topr or left_tile is self.top:
+                    self.fringe_layer.data[ypos][xpos - 1] = self.outer_bottoml
+                elif left_tile is self.outer_topr or left_tile is self.outer_bottomr:
+                    self.generate_water_tile(xpos - 1, ypos)
+                # elif left_tile is self.bottom:
+                #     self.fringe_layer.data[ypos][xpos - 1] = self.outer_topl
+            else:
+                self.fringe_layer.data[ypos][xpos - 1] = self.l
+                self.add_to_list((xpos - 1, ypos))
+
+            if (xpos + 1, ypos) in self.fringe_objects:
+                right_tile = self.fringe_layer.data[ypos][xpos + 1]
+                if right_tile is self.bottoml or right_tile is self.bottom:
+                    self.fringe_layer.data[ypos][xpos + 1] = self.outer_topr
+                # outer_bottomr has to be replaced by outer_topr
+                elif right_tile is self.topr or right_tile is self.bottomr or right_tile is self.r:
+                    self.fringe_layer.data[ypos][xpos + 1] = self.r
+                elif right_tile is self.l:
+                    self.generate_water_tile(xpos + 1, ypos)
+                elif right_tile is self.topl or right_tile is self.top:
+                    self.fringe_layer.data[ypos][xpos + 1] = self.outer_bottomr
+                elif right_tile is self.outer_topl or right_tile is self.outer_bottoml:
+                    self.generate_water_tile(xpos + 1, ypos)
+                # elif right_tile is self.bottom:
+                #     self.fringe_layer.data[ypos][xpos + 1] = self.outer_topr
+
+            else:
+                self.fringe_layer.data[ypos][xpos + 1] = self.r
+                self.add_to_list((xpos + 1, ypos))
 
         elif direction is self.left or self.right:
             self.fringe_layer.data[ypos - 1][xpos] = self.top
