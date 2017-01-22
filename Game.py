@@ -3,6 +3,7 @@ import random
 import pygame
 from pytmx.util_pygame import load_pygame
 
+import AudioPlayer
 import Map
 import Player
 import Sinkhole
@@ -32,6 +33,9 @@ class Game:
         # FPS
         self.fps = 30
 
+        # Music
+        self.music = AudioPlayer.AudioPlayer()
+
         # Display start screen
         # Fill screen
         self.screen.fill((0, 0, 0))
@@ -43,6 +47,7 @@ class Game:
         # Flip display
         pygame.display.flip()
         start = False
+        self.music.startMenuMusic()
         while not start:
             # Check events
             # Get all events
@@ -88,6 +93,7 @@ class Game:
         done = False
         debounced_space = False
         debounced_alt = True
+        self.music.startGameMusic()
         while not done:
             # Generate waves
             waves.generateCanion(10)
@@ -118,8 +124,8 @@ class Game:
                         return None
                     key = event.key
                     # pass keys to map if player is not colliding in order to move camera
-                    # if not player.is_colliding(key, tiled_map):
-                    current_map.handle_input(key)
+                    if not player.is_colliding(key, tiled_map):
+                        current_map.handle_input(key)
                     # SPACE is action key
                     if event.key == pygame.K_SPACE:
                         # Fell tree if possible
@@ -151,9 +157,9 @@ class Game:
             player.render(self.screen)
             current_map.render_ontop_of_player(self.screen)
 
-            # if player.is_dead(tiled_map):
-            #     done = True
-            #     self.display_game_over()
+            if player.is_dead(tiled_map):
+                done = True
+                self.display_game_over()
 
             # flip screen
             pygame.display.flip()
@@ -182,6 +188,7 @@ class Game:
         pygame.display.flip()
 
     def wants_repeat(self):
+        self.music.startMenuMusic()
         exit = False
         while not exit:
             self.clock.tick(self.fps)
