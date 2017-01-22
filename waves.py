@@ -3,6 +3,7 @@ import random
 import pygame
 from pytmx.util_pygame import load_pygame
 
+import AudioPlayer
 import Map
 import Player
 import Sinkhole
@@ -25,6 +26,14 @@ def main():
 
     # flow control
     done = False
+
+    # test music
+    music = AudioPlayer.AudioPlayer()
+    music.startGameMusic()
+    music.startMenuMusic()
+    music.startGameMusic()
+    music.startMenuMusic()
+    music.startGameMusic()
 
     player_dx = int(scr_width / 32 / 2) - 1
     player_dy = int(scr_height / 32 / 2) - 1
