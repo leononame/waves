@@ -1,3 +1,5 @@
+import threading
+
 import pygame
 
 import Animation
@@ -20,6 +22,13 @@ class Player(object):
         self.pos_x = x * 32
         self.pos_y = y * 32
 
+        # Sounds
+        self.chop_sound = pygame.mixer.Sound('assets/sound/chop.wav')
+
+        self.step_sound = pygame.mixer.Sound('assets/sound/step2.wav')
+        self.step_sound_playing = False
+
+
         self.walking = False
         self.interval = num * duration
         self.counter = 0
@@ -35,6 +44,24 @@ class Player(object):
         self.map_y = y + 1 + cy
 
         self.carrying_log = False
+
+    def f(self):
+        # Play step sound
+        self.step_sound_playing = True
+        channel = self.step_sound.play()
+        while channel.get_busy():
+            pygame.time.wait(10)  # ms
+        self.step_sound_playing = False
+
+    def playStepSound(self):
+        if self.step_sound_playing is False:
+            t = threading.Thread(name='playstepsound', target=self.f)
+            t.start()
+
+        # Play step sound
+        # channel = self.step_sound.play()
+        # while channel.get_busy():
+        #     pygame.time.wait(10)  # ms
 
     def is_colliding(self, key, map):
         if key == pygame.K_LEFT:
@@ -66,18 +93,22 @@ class Player(object):
     def render(self, screen):
         if self.dir == self.__left:
             if self.walking:
+                self.playStepSound()
                 self.anim_left.update()
             self.anim_left.render(screen, (self.pos_x, self.pos_y))
         elif self.dir == self.__right:
             if self.walking:
+                self.playStepSound()
                 self.anim_right.update()
             self.anim_right.render(screen, (self.pos_x, self.pos_y))
         elif self.dir == self.__up:
             if self.walking:
+                self.playStepSound()
                 self.anim_up.update()
             self.anim_up.render(screen, (self.pos_x, self.pos_y))
         elif self.dir == self.__down:
             if self.walking:
+                self.playStepSound()
                 self.anim_down.update()
             self.anim_down.render(screen, (self.pos_x, self.pos_y))
         else:
@@ -238,6 +269,13 @@ class Player(object):
                 x = self.map_x + 1
                 y = self.map_y - 1
         if x is not None and y is not None:
+            self.chop_sound.play()
             Utils.fell_tree_at(x, y, tile_map)
+
+            # Play chop sound
+            channel = self.chop_sound.play()
+            while channel.get_busy():
+                pygame.time.wait(10)  # ms
+
             Utils.generate_logs(x, y, tile_map)
 

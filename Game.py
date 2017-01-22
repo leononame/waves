@@ -3,15 +3,16 @@ import random
 import pygame
 from pytmx.util_pygame import load_pygame
 
+import AudioPlayer
 import Map
 import Player
-import Sinkhole
 import Utils
 import WaveGenerator
 
 
 class Game:
     def __init__(self):
+        pygame.mixer.pre_init(44100, -16, 2, 2048)  # setup mixer to avoid sound lag
         # Initialize pygame
         pygame.init()
         # Size of tileset: 32x32
@@ -32,6 +33,9 @@ class Game:
         # FPS
         self.fps = 30
 
+        # Music
+        self.music = AudioPlayer.AudioPlayer()
+
         # Display start screen
         # Fill screen
         self.screen.fill((0, 0, 0))
@@ -43,6 +47,7 @@ class Game:
         # Flip display
         pygame.display.flip()
         start = False
+        self.music.startMenuMusic()
         while not start:
             # Check events
             # Get all events
@@ -88,7 +93,7 @@ class Game:
         done = False
         debounced_space = False
         debounced_alt = True
-        # waves.generateCanion(10, 440, 75)
+        self.music.startGameMusic()
         while not done:
             # Generate waves
             waves.generateCanion(10)
@@ -184,6 +189,7 @@ class Game:
         pygame.display.flip()
 
     def wants_repeat(self):
+        self.music.startMenuMusic()
         exit = False
         while not exit:
             self.clock.tick(self.fps)
