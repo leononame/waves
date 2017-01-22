@@ -70,7 +70,7 @@ class WaveGenerator:
             self.fringe_layer.data[ypos + 1][xpos] = self.outer_topl
 
         # Build middle tunnel
-        for i in range(1, len - 1):
+        for i in range(1, len - 2):
             xpos, ypos = self.next_iteration(direction, xpos, ypos)
             # Make tile water
             self.ground_layer.data[ypos][xpos] = self.w
@@ -78,34 +78,31 @@ class WaveGenerator:
             # Make borders
             self.generate_borders(direction, xpos, ypos)
 
+        self.generate_finish_borders(direction, xpos, ypos)
 
-        # # self.setCorners_Begin(xpos, ypos, neg_dir)
-        #
-        # for i in range(len):
-        #     print("Changing tile: (" + str(xpos) + ', ' + str(ypos) + ')')
-        #
-        #     # Change the water tile...
-        #     self.changeToWater(xpos, ypos)
-        #     #  ... and then the borders at the adjacent tiles
-        #     self.changeToBorder(xpos, ypos, neg_dir, False)
-        #     # Generate outer borders
-        #     if i == 0:
-        #         if neg_dir == self.down:
-        #             self.fringe_layer.data[ypos][xpos - 1] = self.outer_topl
-        #             self.fringe_layer.data[ypos][xpos + 1] = self.outer_topr
-        #         if neg_dir == self.up:
-        #             self.fringe_layer.data[ypos][xpos - 1] = self.outer_bottoml
-        #             self.fringe_layer.data[ypos][xpos + 1] = self.outer_bottomr
-        #         if neg_dir == self.right:
-        #             self.fringe_layer.data[ypos - 1][xpos] = self.outer_bottomr
-        #             self.fringe_layer.data[ypos + 1][xpos] = self.outer_topr
-        #         if neg_dir == self.left:
-        #             self.fringe_layer.data[ypos - 1][xpos] = self.outer_bottoml
-        #             self.fringe_layer.data[ypos + 1][xpos] = self.outer_topl
-        #     if i is not len - 1:
-        #         xpos, ypos = self.spreadCanion(xpos, ypos, neg_dir)
-        #
-        # self.changeToBorder(xpos, ypos, neg_dir, True)
+    def generate_finish_borders(self, direction, xpos, ypos):
+        xpos, ypos = self.next_iteration(direction, xpos, ypos)
+        if direction is self.down:
+            self.fringe_layer.data[ypos][xpos] = self.bottom
+            self.fringe_layer.data[ypos][xpos - 1] = self.bottoml
+            self.fringe_layer.data[ypos][xpos + 1] = self.bottomr
+            self.fringe_objects.extend(((xpos, ypos), (xpos - 1, ypos), (xpos + 1, ypos)))
+        elif direction is self.up:
+            self.fringe_layer.data[ypos][xpos] = self.top
+            self.fringe_layer.data[ypos][xpos - 1] = self.topl
+            self.fringe_layer.data[ypos][xpos + 1] = self.topr
+            self.fringe_objects.extend(((xpos, ypos), (xpos - 1, ypos), (xpos + 1, ypos)))
+        elif direction is self.right:
+            self.fringe_layer.data[ypos - 1][xpos] = self.topr
+            self.fringe_layer.data[ypos][xpos] = self.r
+            self.fringe_layer.data[ypos + 1][xpos] = self.bottomr
+            self.fringe_objects.extend(((xpos, ypos), (xpos, ypos - 1), (xpos, ypos + 1)))
+        elif direction is self.left:
+            self.fringe_layer.data[ypos - 1][xpos ] = self.topl
+            self.fringe_layer.data[ypos][xpos] = self.l
+            self.fringe_layer.data[ypos + 1][xpos] = self.bottoml
+            self.fringe_objects.extend(((xpos, ypos), (xpos, ypos - 1), (xpos, ypos + 1)))
+
     def generate_borders(self, direction, xpos, ypos):
         if direction is self.up or direction is self.down:
             self.fringe_layer.data[ypos][xpos - 1] = self.l
@@ -114,10 +111,10 @@ class WaveGenerator:
             self.fringe_objects.append((xpos + 1, ypos))
         elif direction is self.left or self.right:
             self.fringe_layer.data[ypos - 1][xpos] = self.top
+            self.collision_layer.data[ypos - 1][xpos] = self.top
             self.fringe_layer.data[ypos + 1][xpos] = self.bottom
             self.fringe_objects.append((xpos, ypos - 1))
             self.fringe_objects.append((xpos, ypos + 1))
-
 
     def next_iteration(self, direction, xpos, ypos):
         if direction is self.up:

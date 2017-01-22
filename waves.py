@@ -48,6 +48,7 @@ def main():
 
     # Start loop
     while not done:
+        waveGenerator.generateCanion(20)
         # Spawn random water sinkholes
         count += 1
         if count is fps / 4:
