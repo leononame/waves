@@ -20,6 +20,10 @@ class Player(object):
         self.pos_x = x * 32
         self.pos_y = y * 32
 
+        # Sounds
+        self.chop_sound = pygame.mixer.Sound('assets/sound/chop.wav')
+
+
         self.walking = False
         self.interval = num * duration
         self.counter = 0
@@ -238,6 +242,13 @@ class Player(object):
                 x = self.map_x + 1
                 y = self.map_y - 1
         if x is not None and y is not None:
+            self.chop_sound.play()
             Utils.fell_tree_at(x, y, tile_map)
+
+            # Play chop sound
+            channel = self.chop_sound.play()
+            while channel.get_busy():
+                pygame.time.wait(50)  # ms
+
             Utils.generate_logs(x, y, tile_map)
 
