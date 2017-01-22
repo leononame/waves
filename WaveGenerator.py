@@ -502,13 +502,66 @@ class WaveGenerator:
             self.special_case_down(xpos, ypos)
 
     def special_case_left(self, xpos, ypos):
-        return None
+        # First row
+        if self.fringe_layer.data[ypos -1][xpos] is self.topl:
+            self.fringe_layer.data[ypos - 1][xpos ] = self.top
+            self.collision_layer.data[ypos - 1][xpos ] = self.top
+        elif self.fringe_layer.data[ypos - 1][xpos] is self.outer_topl:
+            self.generate_water_tile(xpos, ypos - 1)
+        else:
+            self.fringe_layer.data[ypos][xpos - 1] = self.outer_bottoml
+
+        if self.fringe_layer.data[ypos + 1][xpos] is self.bottoml:
+            self.fringe_layer.data[ypos + 1][xpos] = self.bottom
+        elif self.fringe_layer.data[ypos + 1][xpos] is self.outer_bottoml:
+            self.generate_water_tile(xpos, ypos + 1)
+        else:
+            self.fringe_layer.data[ypos + 1][xpos] = self.outer_topl
+
+        # Make tile water
+        self.ground_layer.data[ypos][xpos] = self.w
+        self.collision_layer.data[ypos][xpos] = self.w
 
     def special_case_right(self, xpos, ypos):
-        return None
+        # First row
+        if self.fringe_layer.data[ypos -1][xpos] is self.topr:
+            self.fringe_layer.data[ypos - 1][xpos ] = self.top
+            self.collision_layer.data[ypos - 1][xpos ] = self.top
+        elif self.fringe_layer.data[ypos - 1][xpos] is self.outer_topr:
+            self.generate_water_tile(xpos, ypos - 1)
+        else:
+            self.fringe_layer.data[ypos][xpos - 1] = self.outer_bottomr
+
+        if self.fringe_layer.data[ypos + 1][xpos] is self.bottomr:
+            self.fringe_layer.data[ypos + 1][xpos] = self.bottom
+        elif self.fringe_layer.data[ypos + 1][xpos] is self.outer_bottomr:
+            self.generate_water_tile(xpos, ypos + 1)
+        else:
+            self.fringe_layer.data[ypos + 1][xpos] = self.outer_topr
+
+        # Make tile water
+        self.ground_layer.data[ypos][xpos] = self.w
+        self.collision_layer.data[ypos][xpos] = self.w
 
     def special_case_up(self, xpos, ypos):
-        return None
+        # First row
+        if self.fringe_layer.data[ypos][xpos - 1] is self.topl:
+            self.fringe_layer.data[ypos][xpos - 1] = self.l
+        elif self.fringe_layer.data[ypos][xpos - 1] is self.outer_bottomr:
+            self.generate_water_tile(xpos - 1, ypos)
+        else:
+            self.fringe_layer.data[ypos][xpos - 1] = self.outer_bottoml
+
+        if self.fringe_layer.data[ypos][xpos + 1] is self.topr:
+            self.fringe_layer.data[ypos][xpos + 1] = self.r
+        elif self.fringe_layer.data[ypos][xpos + 1] is self.outer_bottoml:
+            self.generate_water_tile(xpos + 1, ypos)
+        else:
+            self.fringe_layer.data[ypos][xpos + 1] = self.outer_bottomr
+
+        # Make tile water
+        self.ground_layer.data[ypos][xpos] = self.w
+        self.collision_layer.data[ypos][xpos] = self.w
 
     def special_case_down(self, xpos, ypos):
         # First row
