@@ -30,6 +30,7 @@ class WaveGenerator:
         self.right = 3
 
         self.fringe_objects = []
+        self.animation_objects = []
         none_gid = self.fringe_layer.data[0][0]
         for x in range(self.tiled_map.width):
             for y in range(self.tiled_map.height):
@@ -51,7 +52,7 @@ class WaveGenerator:
             direction = self.right
         else:
             return None
-
+        self.animation_objects.append([xpos, ypos, direction, 30, len])
         if direction == self.down:
             for x in [xpos-1, xpos, xpos+1]:
                 for y in range(ypos, ypos + len):
@@ -682,3 +683,52 @@ class WaveGenerator:
             dx = 1
             dy = random.randint(-1, 1)
         return (xpos + dx, ypos + dy)
+
+    def render_animations(self):
+        for anim_object in self.animation_objects:
+            xpos = anim_object[0]
+            ypos = anim_object[1]
+            duration = anim_object[3]
+            direction = anim_object[2]
+            len = anim_object[4]
+            if direction == self.down:
+                for x in [xpos - 1, xpos, xpos + 1]:
+                    for y in range(ypos, ypos + len + 1):
+                        self.animate_water(x, y, 0)
+            if direction == self.up:
+                for x in [xpos - 1, xpos, xpos + 1]:
+                    for y in range(ypos - len, ypos + 1):
+                        self.animate_water(x, y, 0)
+            if direction == self.right:
+                for x in range(xpos, xpos + len + 1):
+                    for y in [ypos - 1, ypos, ypos + 1]:
+                        self.animate_water(x, y, 0)
+            if direction == self.left:
+                for x in range(xpos - len, xpos + 1):
+                    for y in [ypos - 1, ypos, ypos + 1]:
+                        self.animate_water(x, y, 0)
+
+            anim_object[3] = duration - 1
+            if duration is 0:
+                self.animation_objects.remove(anim_object)
+                if direction == self.down:
+                    for x in [xpos - 1, xpos, xpos + 1]:
+                        for y in range(ypos, ypos + len + 1):
+                            Utils.remove_tile(x, y, self.tiled_map, 4)
+                if direction == self.up:
+                    for x in [xpos - 1, xpos, xpos + 1]:
+                        for y in range(ypos - len, ypos + 1):
+                            Utils.remove_tile(x, y, self.tiled_map, 4)
+                if direction == self.right:
+                    for x in range(xpos, xpos + len + 1):
+                        for y in [ypos - 1, ypos, ypos + 1]:
+                            Utils.remove_tile(x, y, self.tiled_map, 4)
+                if direction == self.left:
+                    for x in range(xpos - len, xpos + 1):
+                        for y in [ypos - 1, ypos, ypos + 1]:
+                            Utils.remove_tile(x, y, self.tiled_map, 4)
+        return None
+
+    def animate_water(self, x, y, layer):
+        gids = [1, 55, 56, 57]
+        self.tiled_map.layers[4].data[y][x] = gids[random.randint(0, 3)]

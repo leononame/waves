@@ -99,6 +99,7 @@ class Game:
         wave_counter = 0
         random_counter = 0
         self.music.startGameMusic()
+        # waves.generateCanion(10, 80, 70)
         while not done:
             wave_counter += 1
             random_counter += 1
@@ -167,7 +168,7 @@ class Game:
             current_map.render(self.screen)
             player.render(self.screen)
             current_map.render_ontop_of_player(self.screen)
-
+            waves.render_animations()
             if player.is_dead(tiled_map):
                 done = True
                 self.display_game_over()
