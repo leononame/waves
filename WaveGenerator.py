@@ -51,6 +51,9 @@ class WaveGenerator:
 
         # Update fringe list
         self.fringe_objects.remove((xpos, ypos))
+        # Make tile water
+        self.ground_layer.data[ypos][xpos] = self.w
+        self.collision_layer.data[ypos][xpos] = self.w
 
         # Set outer corners
         if direction == self.down:
@@ -65,6 +68,15 @@ class WaveGenerator:
         if direction == self.left:
             self.fringe_layer.data[ypos - 1][xpos] = self.outer_bottoml
             self.fringe_layer.data[ypos + 1][xpos] = self.outer_topl
+
+        # Build middle tunnel
+        for i in range(1, len - 1):
+            xpos, ypos = self.next_iteration(direction, xpos, ypos)
+            # Make tile water
+            self.ground_layer.data[ypos][xpos] = self.w
+            self.collision_layer.data[ypos][xpos] = self.w
+            # Make borders
+            self.generate_borders(direction, xpos, ypos)
 
 
         # # self.setCorners_Begin(xpos, ypos, neg_dir)
@@ -94,6 +106,28 @@ class WaveGenerator:
         #         xpos, ypos = self.spreadCanion(xpos, ypos, neg_dir)
         #
         # self.changeToBorder(xpos, ypos, neg_dir, True)
+    def generate_borders(self, direction, xpos, ypos):
+        if direction is self.up or direction is self.down:
+            self.fringe_layer.data[ypos][xpos - 1] = self.l
+            self.fringe_layer.data[ypos][xpos + 1] = self.r
+            self.fringe_objects.append((xpos - 1, ypos))
+            self.fringe_objects.append((xpos + 1, ypos))
+        elif direction is self.left or self.right:
+            self.fringe_layer.data[ypos - 1][xpos] = self.top
+            self.fringe_layer.data[ypos + 1][xpos] = self.bottom
+            self.fringe_objects.append((xpos, ypos - 1))
+            self.fringe_objects.append((xpos, ypos + 1))
+
+
+    def next_iteration(self, direction, xpos, ypos):
+        if direction is self.up:
+            return xpos, ypos - 1
+        if direction is self.down:
+            return xpos, ypos + 1
+        if direction is self.left:
+            return xpos - 1, ypos
+        if direction is self.right:
+            return xpos + 1, ypos
 
     def get_starting_position(self):
         length = len(self.fringe_objects)
