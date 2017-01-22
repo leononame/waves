@@ -706,7 +706,7 @@ class WaveGenerator:
             dy = random.randint(-1, 1)
         return (xpos + dx, ypos + dy)
 
-    def render_animations(self, screen):
+    def render_animations(self, screen, cx, cy):
         for anim_object in self.animation_objects:
             xpos = anim_object[0]
             ypos = anim_object[1]
@@ -716,19 +716,19 @@ class WaveGenerator:
             if direction == self.down:
                 for x in [xpos - 1, xpos, xpos + 1]:
                     for y in range(ypos, ypos + len + 1):
-                        self.animate_water(x, y, screen)
+                        self.animate_water(x, y, screen, cx, cy)
             if direction == self.up:
                 for x in [xpos - 1, xpos, xpos + 1]:
                     for y in range(ypos - len, ypos + 1):
-                        self.animate_water(x, y, screen)
+                        self.animate_water(x, y, screen, cx, cy)
             if direction == self.right:
                 for x in range(xpos, xpos + len + 1):
                     for y in [ypos - 1, ypos, ypos + 1]:
-                        self.animate_water(x, y, screen)
+                        self.animate_water(x, y, screen, cx, cy)
             if direction == self.left:
                 for x in range(xpos - len, xpos + 1):
                     for y in [ypos - 1, ypos, ypos + 1]:
-                        self.animate_water(x, y, screen)
+                        self.animate_water(x, y, screen, cx, cy)
 
             anim_object[3] = duration - 1
             if duration is 0:
@@ -759,9 +759,9 @@ class WaveGenerator:
                             Utils.remove_tile(x, y, self.tiled_map, 4)
         return None
 
-    def animate_water(self, x, y, screen):
+    def animate_water(self, x, y, screen, cx, cy):
         gids = [1, 55, 56, 57]
         self.tiled_map.layers[4].data[y][x] = gids[random.randint(0, 3)]
         image = self.tiled_map.get_tile_image(x, y, 4)
         if image is not None:
-            screen.blit(image, (x * 32, y * 32))
+            screen.blit(image, ((x - cx) * 32, (y - cy) * 32))

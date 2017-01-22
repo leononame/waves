@@ -168,7 +168,7 @@ class Game:
             current_map.render(self.screen)
             player.render(self.screen)
             current_map.render_ontop_of_player(self.screen)
-            waves.render_animations(self.screen)
+            waves.render_animations(self.screen, current_map.camera_x, current_map.camera_y)
             if player.is_dead(tiled_map):
                 done = True
                 self.display_game_over()
